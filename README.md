@@ -2,6 +2,7 @@
 
 ## Repository Structure
 
+```
 .
 └── stream_gage_final  
     ├── data  
@@ -15,3 +16,4 @@
     ├── .gitignore  
     ├── LICENSE  
     ├── README.md  
+```
