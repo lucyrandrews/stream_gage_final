@@ -4,9 +4,7 @@
 
 # Directories ----
 
-library(here)
-
-if(!dir.exists("metadata")) {
+if(!dir.exists(here("metadata"))) {
   dir.create("metadata")
 }
 
