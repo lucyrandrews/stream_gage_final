@@ -39,8 +39,9 @@ vignettes/*.pdf
 .Renviron
 
 # Mac-specific local .DS_Store files
-/*.DS_Store
+*.DS_Store
 
-/*.StrmAnlyzeR_0.1.0.0.tar.gz
-/*StrmAnlyzeR_master
+# products of local package builds
+packages_unpublished/StrmAnlyzeR_0.1.0.0.tar.gz
+packages_unpublished/StrmAnlyzeR_master
 
