@@ -2,7 +2,7 @@
 
 # This scripts loads all packages needed for this stream gage analysis.
 # It also builds `StrmAnlyzeR`, an unpublished package, if it is not already
-# built on a user's computer
+# built on a user's computer.
 
 # CRAN packages ----
 
@@ -50,6 +50,7 @@ library(ggspatial)
 # hydrologic data
 library(nhdR)
 library(nhdplusTools)
+
 
 
 # Non-CRAN packages ----
