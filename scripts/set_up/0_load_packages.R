@@ -6,6 +6,11 @@
 
 # CRAN packages ----
 
+# reproducibility
+library(roxygen2)
+library(here)
+library(devtools)
+
 # tidy syntax
 library(tidyverse)
 library(magrittr)
@@ -18,8 +23,6 @@ library(knitr)
 library(kableExtra)
 
 # file import and management
-library(here)
-library(devtools)
 library(tools)
 library(readxl)
 library(googledrive)

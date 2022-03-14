@@ -3,7 +3,7 @@
 # This scripts sets global options and analytic parameters so that all options
 # and parameters are located in a single place.
 
-# GLOBAL OPTIONS ----
+# Global options ----
 
 options(stringsAsFactors = FALSE)
 
@@ -13,7 +13,7 @@ options(timeout = 30000)
 
 
 
-# ANALYTIC PARAMETERS ----
+# Analytic parameters ----
 
 # CRS for all spatial data
 global_crs_epsg <- 4269

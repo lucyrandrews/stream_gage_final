@@ -42,7 +42,10 @@ vignettes/*.pdf
 # Mac-specific local .DS_Store files
 *.DS_Store
 
-# products of local package builds
+# Products of local package builds
 packages_unpublished/StrmAnlyzeR_0.1.0.0.tar.gz
 packages_unpublished/StrmAnlyzeR_master
+
+# To do file used to track outstanding tasks
+to_do
 

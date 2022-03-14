@@ -2,7 +2,7 @@
 
 # This scripts creates directories needed for analysis and output.
 
-# CREATE DIRECTORIES ----
+# Directories ----
 
 library(here)
 
