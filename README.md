@@ -13,10 +13,12 @@
     │   │   ├── 04_build_functions.R
     │   │   ├── 05_build_base_maps.R 
     │   ├── compile_analysis.Rmd
-    ├── raw_data  
-    ├── metadata  
-    ├── output_data
-    ├── output_figures
+    ├── data  
+    │   ├── metadata  
+    │   ├── raw_data
+    │   ├── process_data
+    ├── output  
+    │   ├── figures 
     ├── packages_unpublished  
     │   ├── StrmAnlyzeR_forked.zip  
     ├── .gitignore  
