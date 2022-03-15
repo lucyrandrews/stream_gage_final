@@ -32,9 +32,10 @@ library(archive)
 # spatial data
 library(sf)
 library(rgdal)
-library(tigris)
+library(USAboundaries)
 library(rmapshaper)
 library(maptools)
+library(tmap)
 
 # computation
 library(foreach)
