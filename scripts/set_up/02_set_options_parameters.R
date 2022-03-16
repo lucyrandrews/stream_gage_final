@@ -23,4 +23,4 @@ global_crs <- st_crs(global_crs_epsg)
 drop_ftypes <- c("Coastline")
 
 # minimum total upstream drainage area to drop from flowlines objects
-drop_min_da_sqkm <- 0
+drop_min_da_sqkm <- 5
