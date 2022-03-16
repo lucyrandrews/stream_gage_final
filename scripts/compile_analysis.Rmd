@@ -24,6 +24,11 @@ source(here("scripts", "set_up", "05_build_base_maps.R"))
 ```{r import_clean_data}
 # import Watershed Boundary Dataset and National Hydrography Dataset objects
 source(here("scripts", "clean_data", "01_import_clean_nhd_wbd.R"))
+
+# add California Department of Fish and Wildlife Areas of Conservation Emphasis data
+source(here("scripts", "clean_data", "02_import_clean_ace.R"))
+
+#
 ```
 
 
