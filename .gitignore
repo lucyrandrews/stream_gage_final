@@ -1,20 +1,20 @@
-# History files
+# history files
 .Rhistory
 .Rapp.history
 
-# Session Data files
+# session data files
 .RData
 
-# User-specific files
+# user-specific files
 .Ruserdata
 
-# Example code in package build process
+# example code in package build process
 *-Ex.R
 
-# Output files from R CMD build
+# output files from R CMD build
 /*.tar.gz
 
-# Output files from R CMD check
+# output files from R CMD check
 /*.Rcheck/
 
 # RStudio files
@@ -25,27 +25,31 @@
 vignettes/*.html
 vignettes/*.pdf
 
-# OAuth2 token, see https://github.com/hadley/httr/releases/tag/v0.3
+# oauth2 token, see https://github.com/hadley/httr/releases/tag/v0.3
 .httr-oauth
 
 # knitr and R markdown default cache directories
 *_cache/
 /cache/
 
-# Temporary files created by R markdown
+# temporary files created by R markdown
 *.utf8.md
 *.knit.md
 
-# R Environment Variables
+# R environment variables
 .Renviron
 
 # Mac-specific local .DS_Store files
 *.DS_Store
 
-# Products of local package builds
+# products of local package builds
 packages_unpublished/StrmAnlyzeR_0.1.0.0.tar.gz
 packages_unpublished/StrmAnlyzeR_master
 
-# To do file used to track outstanding tasks
+# data files to big to host on GitHub and that are downloaded via scripts
+data/raw_data/*
+data/processed_data/*
+
+# to do file used to track outstanding tasks
 to_do
 
