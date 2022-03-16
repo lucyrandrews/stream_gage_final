@@ -20,10 +20,10 @@
     │   ├── metadata
     │   │   ├── ace_aquatic_biodiversity_factsheet.pdf 
     │   │   ├── nhdplus_v2_user_guide.pdf
-    │   ├── raw_data                                # created via set-up script
-    │   ├── processed_data                          # created via set-up script
-    ├── output                                      # created via set-up script
-    │   ├── figures                                 # created via set-up script
+    │   ├── raw_data                                    # created via set-up script
+    │   ├── processed_data                              # created via set-up script
+    ├── output                                          # created via set-up script
+    │   ├── figures                                     # created via set-up script
     ├── packages_unpublished  
     │   ├── StrmAnlyzeR_forked.zip  
     ├── .gitignore  
