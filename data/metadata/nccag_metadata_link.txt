@@ -1,4 +1,4 @@
 California Department of Water Resources (DWR)
 Natural Communities Commonly Associated with Groundwater (NCCAG) metadata:
 
-https://gis.water.ca.gov/app/NCDatasetViewer/sitedocs/#
+https://gis.water.ca.gov/app/NCDatasetViewer/sitedocs/
