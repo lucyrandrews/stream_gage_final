@@ -16,13 +16,16 @@ if(!dir.exists(here("data", "raw_data", "ace"))) {
 
 # Download ACE ----
 
-# specify url for ACE data download
-ace_url <- "https://filelib.wildlife.ca.gov/Public/BDB/GIS/BIOS/Public_Datasets/2700_2799/ds2768.zip"
-
 # download ACE data as a zipped file
 if(!file.exists(here("data", "raw_data", "ace", "ds2768.zip"))) {
+  
+  ace_url <- "https://filelib.wildlife.ca.gov/Public/BDB/GIS/BIOS/Public_Datasets/2700_2799/ds2768.zip"
+  
   download.file(url = ace_url,
                 destfile = here("data", "raw_data", "ace", "ds2768.zip"))
+  
+  rm(ace_url)
+  
 }
 
 # unzip ACE zipped file
@@ -50,4 +53,4 @@ flowlines <- flowlines %>%
   left_join(st_drop_geometry(ace), by = "huc12_id")
 
 # clean up
-rm(ace_url, ace)
+rm(ace)

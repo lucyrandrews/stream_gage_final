@@ -15,13 +15,17 @@ if(!dir.exists(here("data", "raw_data", "wbd"))) {
 
 # Download WBD ----
 
-# specify url for Watershed Boundary Database (WBD) 18 (California) download
-wbd_18_url <- "https://prd-tnm.s3.amazonaws.com/StagedProducts/Hydrography/WBD/HU2/Shape/WBD_18_HU2_Shape.zip"
-
 # download WBD as a zipped file
 if(!file.exists(here("data", "raw_data", "wbd", "wbd_18.zip"))) {
+  
+  # HUC2 #18 is California (not state boundary - hydrologic boundary)
+  wbd_18_url <- "https://prd-tnm.s3.amazonaws.com/StagedProducts/Hydrography/WBD/HU2/Shape/WBD_18_HU2_Shape.zip"
+  
   download.file(url = wbd_18_url,
                 destfile = here("data", "raw_data", "wbd", "wbd_18.zip"))
+  
+  rm(wbd_18_url)
+  
 }
 
 # unzip WBD zipped file
@@ -59,9 +63,6 @@ huc12s <- st_read(dsn = here("data", "raw_data", "wbd", "Shape"),
   mutate(huc4_group = str_sub(huc12_id, 1, 4)) %>%
   select(huc12_id, huc12_name, huc4_group) %>%
   st_intersection(select(ca_boundary, geometry))
-
-# clean up
-rm(wbd_18_url)
 
 
 
