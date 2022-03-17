@@ -2,7 +2,7 @@
 
 # This scripts builds base maps used for visualization.
 
-# Color ramps ----
+# Colors and palettes ----
 
 light_grey <- "grey95"
 mid_grey <- "grey80"
