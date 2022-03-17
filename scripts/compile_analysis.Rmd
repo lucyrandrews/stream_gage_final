@@ -28,7 +28,9 @@ source(here("scripts", "clean_data", "01_import_clean_nhd_wbd.R"))
 # add California Department of Fish and Wildlife Areas of Conservation Emphasis data
 source(here("scripts", "clean_data", "02_import_clean_ace.R"))
 
-#
+# add California Department of Water Resources Natural Communities Commonly
+# Associated with Groundwater
+source(here("scripts", "clean_data", "03_import_clean_nccag.R"))
 ```
 
 
