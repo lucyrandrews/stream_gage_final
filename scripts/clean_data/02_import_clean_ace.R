@@ -43,14 +43,3 @@ ace <- st_read(dsn = here("data", "raw_data", "ace", "ds2768.gdb")) %>%
          ace_aq_biodiv_value = BioAqSumSW) %>%
   select(huc12_id, ace_aq_biodiv_value) %>%
   rename_geometry(g = ., name = "geometry")
-
-# join ACE data to HUC12 sf object
-huc12s <- huc12s %>%
-  left_join(st_drop_geometry(ace), by = "huc12_id")
-
-# join ACE data to flowlines
-flowlines <- flowlines %>%
-  left_join(st_drop_geometry(ace), by = "huc12_id")
-
-# clean up
-rm(ace)
