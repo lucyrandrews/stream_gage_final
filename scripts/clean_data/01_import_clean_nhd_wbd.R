@@ -114,16 +114,23 @@ flowlines <- flowlines %>%
          totdasqkm > drop_min_da_sqkm)
 
 # specify columns to keep for analysis
-keep_flowlines_colnames <- c("comid", "ftype", "streamorde", "fromnode",
-                             "tonode", "hydroseq", "levelpathi", "pathlength",
-                             "terminalpa", "arbolatesu", "divergence",
-                             "startflag", "terminalfl", "dnlevel", "uplevelpat",
-                             "uphydroseq", "dnlevelpat", "dnminorhyd",
-                             "dnhydroseq", "frommeas", "tomeas", "reachcode",
-                             "lengthkm", "totdasqkm", "est_discharge_cfs")
+keep_flowlines_colnames <- c("comid", "ftype", "streamorde", "gnis_name",
+                             "fromnode", "tonode", "hydroseq", "levelpathi",
+                             "pathlength", "terminalpa", "arbolatesu",
+                             "divergence", "startflag", "terminalfl", "dnlevel", 
+                             "uplevelpat", "uphydroseq", "dnlevelpat",
+                             "dnminorhyd", "dnhydroseq", "frommeas", "tomeas",
+                             "reachcode", "lengthkm", "totdasqkm",
+                             "est_discharge_cfs")
 
 flowlines <- flowlines %>%
   select(all_of(keep_flowlines_colnames))
+
+# import and clean dataframe of flowline comid to-from relationships
+comids_to_from <- nhd_plus_load(vpu = 18,
+                                component = "NHDPlusAttributes",
+                                dsn = "PlusFlow") %>%
+  select(FROMCOMID, TOCOMID)
 
 # clean up
 rm(vaa, erom_extension, keep_flowlines_colnames)
