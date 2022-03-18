@@ -5,11 +5,24 @@
 
 # Global options ----
 
+# import strings unfactored
 options(stringsAsFactors = FALSE)
 
+# display digits rather than default to scientific notation for most numbers
 options(scipen = 999)
 
+# set a high timeout limit in case large file downloads are slow
 options(timeout = 30000)
+
+
+
+# Computational options ----
+
+# specify the number of cores to use and leave one free for CPU management
+n_cores <- detectCores() - 1
+
+# register parallel processing
+registerDoParallel(cores = n_cores)
 
 
 
@@ -24,3 +37,7 @@ drop_ftypes <- c("Coastline")
 
 # minimum total upstream drainage area to drop from flowlines objects
 drop_min_da_sqkm <- 5
+
+# threshold for drainage area change analysis
+threshold_upstream <- 0.5 # drainage area below 50% of initial drainage area
+threshold_downstream <- 1.5 # drainage area above 150% of initial drainage area
