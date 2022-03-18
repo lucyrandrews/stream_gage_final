@@ -40,22 +40,29 @@ unzip(zipfile = here("data", "raw_data", "nccag",
 
 # Import and clean NCCAG sf objects ----
 
+# import and clean vegetation layer
 nccag_vegetation <- st_read(here("data", "raw_data", "nccag",
                                  "i02_naturalcommunitiescommonlyassociatedwithgroundwater"),
                             layer = "i02_NCCAG_Vegetation") %>%
   st_transform(crs = global_crs) %>%
   mutate(is_valid = st_is_valid(geometry)) %>%
   filter(is_valid) %>%
-  rename(nccag_id = POLYGON_ID) %>%
-  select(nccag_id)
+  select(geometry)
 
+# import and clean wetland layer
 nccag_wetland <- st_read(here("data", "raw_data", "nccag",
                               "i02_naturalcommunitiescommonlyassociatedwithgroundwater"),
                          layer = "i02_NCCAG_Wetlands") %>%
   st_transform(crs = global_crs) %>%
   mutate(is_valid = st_is_valid(geometry)) %>%
   filter(is_valid) %>%
-  rename(nccag_id = POLYGON_ID) %>%
-  select(nccag_id)
+  select(geometry)
 
-nccag <- rbind(nccag_vegetation, nccag_wetland)
+# create a single object
+nccag <- rbind(nccag_vegetation, nccag_wetland) %>%
+  mutate(nccag = TRUE)
+
+# clean up
+rm(nccag_vegetation, nccag_wetland)
+
+
