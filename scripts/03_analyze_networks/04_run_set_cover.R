@@ -5,4 +5,5 @@
 
 # Structure data to use in set cover analysis ----
 
-# identify
+# prep data structure for weighted set cover with function `weightedSetCover`
+# from `WebGestaltR` package
