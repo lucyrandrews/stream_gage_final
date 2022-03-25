@@ -21,8 +21,9 @@ network_analysis_long_down <- network_analysis %>%
   filter(!is.na(associated_comid)) %>%
   rename(gage_comid = COMID,
          comid = associated_comid) %>%
-  mutate(gage_location = "upstream") %>%
-  select(gage_comid, comid, gage_location, location)
+  mutate(gage_comid = as.character(gage_comid),
+         gage_location = "upstream") %>%
+  select(gage_comid, comid, gage_location)
 
 # clean up
 rm(max_n_down, down_names)
@@ -46,18 +47,34 @@ network_analysis_long_up <- network_analysis %>%
   rename(gage_comid = COMID,
          comid = associated_comid) %>%
   mutate(gage_location = "downstream") %>%
-  select(gage_comid, comid, gage_location, location)
+  select(gage_comid, comid, gage_location)
 
 # clean up
 rm(max_n_up, up_names)
 
 
 
+# Create rows for gages on comids (instead of upstream or downstream) ----
+
+# create vectors to compose dataframe
+comid <- unique(network_analysis$COMID)
+gage_comid <- unique(network_analysis$COMID)
+gage_location <- rep("on comid", length(unique(network_analysis$COMID)))
+
+# compose dataframe
+network_analysis_long_on <- tibble(gage_comid, comid, gage_location)
+
+
+
 # Create single long format dataframe ----
 
+# bind all rows together and add HUC4 ID
 network_analysis_long <- rbind(network_analysis_long_up,
-                               network_analysis_long_down) %>%
-  select(comid, gage_comid, gage_location)
+                               network_analysis_long_down,
+                               network_analysis_long_on) %>%
+  left_join(st_drop_geometry(select(flowlines, comid, huc4_group)),
+            by = c("gage_comid" = "comid"))
 
 # clean up
-rm(network_analysis_long_down, network_analysis_long_up)
+rm(network_analysis_long_down, network_analysis_long_up,
+   network_analysis_long_on, comid, gage_comid, gage_location)
