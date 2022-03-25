@@ -38,3 +38,17 @@ st_line_midpoints <- function(sf_lines = NULL) {
   geometry <- st_sf(geometry)
   
 }
+
+
+
+#' Rescale a numeric vector so that all values are between 0 and 1 without
+#' performing any normalizing
+#' 
+#' @param vec A vector of numeric values
+#' @return A vector of numeric values between 0 and 1
+
+rescale_zero_one <- function(x) {
+  
+  x / max(x, na.rm = TRUE)
+
+}
