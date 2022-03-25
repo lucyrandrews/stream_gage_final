@@ -105,6 +105,9 @@ source(here("scripts", "03_analyze_networks", "02_reshape_network_analysis.R"))
 
 # Run set-cover analysis
 
-```{r}
+## Assign value to each comid and cost to each set
 
+```{r assign_set_costs, quiet = TRUE, warning = FALSE}
+# run script that compiles the values/costs associated with each gage-comid set
+source(here("scripts", "03_analyze_networks", "03_value_comids_sets.R"))
 ```
