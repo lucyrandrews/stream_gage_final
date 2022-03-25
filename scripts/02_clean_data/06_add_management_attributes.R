@@ -111,6 +111,10 @@ nid_nn_sliced <- flowlines %>%
   filter(da_dif_ratio >= da_dif_ratio_min & da_dif_ratio <= da_dif_ratio_max |
            da_dif < da_dif_max & !is.infinite(da_dif_ratio))
 
+# associate flowlines with dams
+flowlines <- flowlines %>%
+  mutate(nid_dam = comid %in% nid_nn_sliced$comid)
+
 # clean up
 rm(flowlines_indexing, nn_search_radius, nid, nid_nn, nid_nn_sliced, da_dif_max,
    da_dif_ratio_min, da_dif_ratio_max)
