@@ -7,31 +7,104 @@ output: html_document
 
 # Set up environment, specify parameters for analysis, and create global objects
 
-```{r set_up}
+```{r set_up, quiet = TRUE, warning = FALSE}
 # load `here` package for easy relative file paths
 library(here)
 
 # run set-up
-source(here("scripts", "set_up", "01_load_packages.R"))
-source(here("scripts", "set_up", "02_set_options_parameters.R"))
-source(here("scripts", "set_up", "03_create_directories.R"))
-source(here("scripts", "set_up", "04_build_functions.R"))
-source(here("scripts", "set_up", "05_build_base_maps.R"))
+source(here("scripts", "01_set_up", "01_load_packages.R"))
+source(here("scripts", "01_set_up", "02_set_options_parameters.R"))
+source(here("scripts", "01_set_up", "03_create_directories.R"))
+source(here("scripts", "01_set_up", "04_build_functions.R"))
+source(here("scripts", "01_set_up", "05_build_base_maps.R"))
+
+# indicate whether to use pre-processed data
+load_data <- TRUE
 ```
 
-# Import data necessary for analysis
 
-```{r import_clean_data}
+
+# Import data necessary for analysis and associate fundamental geometric objects
+# with relevant attributes
+
+## Import data describing the stream network and watershed boundaries
+
+```{r import_clean_data, quiet = TRUE, warning = FALSE}
 # import Watershed Boundary Dataset and National Hydrography Dataset objects
-source(here("scripts", "clean_data", "01_import_clean_nhd_wbd.R"))
+source(here("scripts", "02_clean_data", "01_import_clean_nhd_wbd.R"))
+```
 
-# add California Department of Fish and Wildlife Areas of Conservation Emphasis data
-source(here("scripts", "clean_data", "02_import_clean_ace.R"))
+## Import data describing management-relevant attributes
 
-# add California Department of Water Resources Natural Communities Commonly
+```{r import_attributes, quiet = TRUE, warning = FALSE}
+# import California Department of Fish and Wildlife Areas of Conservation Emphasis data
+source(here("scripts", "02_clean_data", "02_import_clean_ace.R"))
+
+# import California Department of Water Resources Natural Communities Commonly
 # Associated with Groundwater
-source(here("scripts", "clean_data", "03_import_clean_nccag.R"))
+source(here("scripts", "02_clean_data", "03_import_clean_nccag.R"))
+
+# import reference quality stream segments
+source(here("scripts", "02_clean_data", "04_import_clean_ref_streams.R"))
+
+# import National Inventory of Dams dams
+source(here("scripts", "02_clean_data", "05_import_clean_nid.R"))
+```
+
+## Associate management-relevant attributes with flowlines
+
+```{r associate_attributes, quiet = TRUE, warning = FALSE}
+# associate management-relevant attributes with flowlines via ID joins and
+# spatial joins
+source(here("scripts", "02_clean_data", "06_add_management_attributes.R"))
 ```
 
 
 
+# Analyze stream network connectivity
+
+## Perform base analysis
+
+Analyze upstream and downstream connectivity by evaluating the coverage that
+would be provided by a gage installed on each stream segment.
+
+```{r analyze_network, quiet = TRUE, warning = FALSE}
+# load pre-processed network data if it exists; otherwise, analyze the full
+# network
+if(load_data) {
+  
+  if(file.exists(here("data", "processed_data", "flowlines_for_analysis",
+                      "network_analysis.csv"))) {
+    
+    network_analysis <- read_csv(here("data", "processed_data",
+                                      "flowlines_for_analysis",
+                                      "network_analysis.csv"))
+    
+  } else {
+    
+    sprintf("There is no pre-processed data to load.")
+    
+  }
+  
+} else {
+  
+  # note that analyzing the full network takes time - perhaps upwards of 30 min
+  source(here("scripts", "03_analyze_networks", "01_analyze_full_network.R"))
+  
+}
+```
+
+## Reshape analytic results
+
+```{r reshape_results, quiet = TRUE, warning = FALSE}
+# run script that reshapes network analysis results
+source(here("scripts", "03_analyze_networks", "02_reshape_network_analysis.R"))
+```
+
+
+
+# Run set-cover analysis
+
+```{r}
+
+```
