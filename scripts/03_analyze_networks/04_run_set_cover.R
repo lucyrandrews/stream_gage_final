@@ -44,3 +44,6 @@ if(unweighted_set_cover) {
   rm(sets_w_elements, cost_weights)
   
 }
+
+# clean up
+rm(unweighted_set_cover)
