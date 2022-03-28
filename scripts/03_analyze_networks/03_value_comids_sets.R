@@ -82,3 +82,8 @@ set_costs <- set_costs %>%
 set_costs <- set_costs %>%
   mutate(set_cost_rescaled = 1 - rescale_zero_one(set_value))
 
+# replace 0 values with a tiny number, since 0 cost indicates a set of maximum
+# value but will get in the way of set-cover weighting; essentially, there is
+# no "cost" to selecting these sets
+set_costs[set_costs == 0] <- 0.000001
+
