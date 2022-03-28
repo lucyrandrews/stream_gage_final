@@ -3,10 +3,13 @@
 # This scripts builds base maps used for visualization.
 
 # Colors and palettes ----
+white <- "white"
 
-light_grey <- "grey95"
+light_grey <- "grey93"
 mid_grey <- "grey80"
 dark_grey <- "grey65"
+
+mid_green <- "chartreuse4"
 
 
 
