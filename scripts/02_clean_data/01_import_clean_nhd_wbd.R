@@ -176,3 +176,11 @@ flowlines <- flowlines %>%
 
 # clean up
 rm(huc12_outlet_comids)
+
+
+
+# Import NHD gage data
+gages <- get_gagesII(AOI = ca_boundary) %>%
+  rename(gage_id = id,
+         gage_totdasqkm = drain_sqkm) %>%
+  rowid_to_column(var = "gage_index")
