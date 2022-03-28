@@ -16,6 +16,9 @@
 #       National Inventory of Dams (NID) for which flow monitoring can lend
 #       useful water release management information  
 #         > {0, 1}
+#   - Gages: gages operated by USGS and listed in the GagesII dataset maintained
+#       in the National Hydrography Dataset
+#         > {0, 1}
 
 # Associate flowlines with ACE data ----
 
@@ -83,7 +86,7 @@ nid_nn <- nid_nn %>%
             by = c("comid", "reachcode")) %>%
   select(-geometry)
 
-# join dam information to neighbors
+# join dam information to comid neighbors
 nid_nn <- nid_nn %>%
   left_join(st_drop_geometry(nid),
             by = "nid_index") %>%
@@ -91,8 +94,8 @@ nid_nn <- nid_nn %>%
   mutate(da_dif = abs(totdasqkm - nid_totdasqkm)) %>%
   ungroup()
 
-# select neighbor for each dam that has the closest drainage area
-# to the drainage area reported in the NID
+# select comid neighbor for each dam that has the closest drainage area to the
+# drainage area reported in the NID
 nid_nn_sliced <- nid_nn %>%
   group_by(nid_index) %>%
   slice(which.min(da_dif)) %>%
@@ -116,5 +119,69 @@ flowlines <- flowlines %>%
   mutate(nid_dam = comid %in% nid_nn_sliced$comid)
 
 # clean up
-rm(flowlines_indexing, nn_search_radius, nid, nid_nn, nid_nn_sliced, da_dif_max,
-   da_dif_ratio_min, da_dif_ratio_max)
+rm(nid, nid_nn, nid_nn_sliced)
+
+
+
+# Associate gages with flowlines ----
+
+# search for neighbors with a distance tolerance
+gages_nn <- get_flowline_index(flines = flowlines_indexing,
+                               points = gages,
+                               search_radius = nn_search_radius,
+                               precision = 10,
+                               # max_matches is a large number to grab all matches
+                               max_matches = 100) %>%
+  rename(gage_index = id,
+         comid = COMID,
+         reachcode = REACHCODE,
+         reachmeasure = REACH_meas)
+
+# join in flowline information to neighbors
+gages_nn <- gages_nn %>%
+  left_join(dplyr::select(flowlines, comid, reachcode, totdasqkm),
+            by = c("comid", "reachcode")) %>%
+  select(-geometry)
+
+# join gage information to comid neighbors
+gages_nn <- gages_nn %>%
+  left_join(st_drop_geometry(gages),
+            by = "gage_index") %>%
+  rowwise() %>%
+  mutate(da_dif = abs(totdasqkm - gage_totdasqkm)) %>%
+  ungroup()
+
+# select comid neighbor for each gage that has the closest drainage area to the
+# drainage area reported in the gages dataset
+gages_nn_sliced <- gages_nn %>%
+  group_by(gage_index) %>%
+  slice(which.min(da_dif)) %>%
+  ungroup()
+
+# add geometry in for the associated comid to locate chosen neighbor gages
+# and filter to drop gages whose drainage area can't be matched with a flowline
+# within a reasonable tolerance (thereby likely indicating off-channel or
+# erroneous location)
+gages_nn_sliced <- flowlines %>%
+  st_drop_geometry() %>%
+  select(comid) %>%
+  right_join(gages_nn_sliced, by = "comid") %>%
+  rowwise() %>%
+  mutate(da_dif_ratio =  totdasqkm / gage_totdasqkm) %>%
+  ungroup() %>%
+  filter(da_dif_ratio >= da_dif_ratio_min & da_dif_ratio <= da_dif_ratio_max |
+           da_dif < da_dif_max & !is.infinite(da_dif_ratio))
+
+# associate flowlines with gages
+flowlines <- flowlines %>%
+  mutate(has_gage = comid %in% gages_nn_sliced$comid)
+
+# associate gages with flowline comids
+gages <- gages %>%
+  left_join(select(gages_nn_sliced, comid, gage_index, totdasqkm),
+            by = "gage_index") %>%
+  filter(!is.na(comid))
+
+# clean up
+rm(gages_nn, gages_nn_sliced, da_dif_max, da_dif_ratio_max, da_dif_ratio_min,
+   nn_search_radius)
