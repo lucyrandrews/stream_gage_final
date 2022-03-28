@@ -51,3 +51,7 @@ da_dif_max <- 25
 # outside of which a dam will not be associated with a flowline
 da_dif_ratio_min <- 0.5
 da_dif_ratio_max <- 2
+
+# determine whether set cover should be weighted (currently buggy) or unweighted
+# (less preferred but currently functional)
+unweighted_set_cover <- TRUE
