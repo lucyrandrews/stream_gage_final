@@ -1,6 +1,6 @@
-## CREATE FIGURES
+## CREATE GAGED NETWORK FIGURES
 
-# This script creates figures from final results.
+# This script creates figures that visualize the currently gaged network.
 
 # Map currently gaged network ----
 
@@ -45,7 +45,7 @@ ca_base_map +
                 labels = c("ungaged", "gaged"),
                 col = c(grey_3, mid_green),
                 border.col = white) +
-  tm_layout(main.title = "Currently Gaged Network: HUC12 Outlet Gage Coverage",
+  tm_layout(main.title = "Currently Gaged Network:\nHUC12 Outlet Gage Coverage",
             main.title.position = "center",
             legend.text.size = 1,
             legend.width = 2)
@@ -59,12 +59,13 @@ ggplot(filter(flowlines, nccag == 1)) +
   scale_fill_manual(values = c(grey_3, mid_green),
                     labels = c("ungaged", "gaged")) +
   scale_y_continuous(expand = c(0, 0)) +
-  labs(title = "Currently Gaged Network: NCCAG Coverage",
+  labs(title = "Currently Gaged Network:\nNCCAG Coverage",
        x = "HUC4 watershed",
        y = "length of stream channel (km)") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 60, hjust = 1),
-        legend.title = element_blank())
+        legend.title = element_blank(),
+        plot.title = element_text(hjust = 0.5))
 
 # make a stacked bar chart of reference quality coverage
 ggplot(filter(flowlines, ref_quality == 1)) +
@@ -75,22 +76,24 @@ ggplot(filter(flowlines, ref_quality == 1)) +
   scale_fill_manual(values = c(grey_3, mid_green),
                     labels = c("ungaged", "gaged")) +
   scale_y_continuous(expand = c(0, 0)) +
-  labs(title = "Currently Gaged Network: Reference Quality Streams Coverage",
+  labs(title = "Currently Gaged Network:\nReference Quality Streams Coverage",
        x = "HUC4 watershed",
        y = "length of stream channel (km)") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 60, hjust = 1),
-        legend.title = element_blank())
+        legend.title = element_blank(),
+        plot.title = element_text(hjust = 0.5))
 
 # make a stacked bar chart of dams coverage
 ggplot(filter(flowlines, nid_dam)) +
-  geom_bar(aes(x = huc4_group, fill = in_gaged_network)) +
+  geom_bar(aes(x = huc4_name, fill = in_gaged_network)) +
   scale_fill_manual(values = c(grey_3, mid_green),
                     labels = c("ungaged", "gaged")) +
   scale_y_continuous(expand = c(0, 0), limits = c(0, 250)) +
-  labs(title = "Currently Gaged Network - Dams Coverage",
+  labs(title = "Currently Gaged Network:\nDams Coverage",
        x = "HUC4 watershed",
        y = "count of dams") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 60, hjust = 1),
-        legend.title = element_blank())
+        legend.title = element_blank(),
+        plot.title = element_text(hjust = 0.5))
