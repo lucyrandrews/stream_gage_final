@@ -14,3 +14,20 @@ gaged_comids <- network_analysis_long %>%
 
 flowlines <- flowlines %>%
   mutate(in_gaged_network = comid %in% gaged_comids)
+
+# update HUC12 polygons to list gaged coverage status and ACE value
+huc12s <- huc12s %>%
+  left_join(flowlines %>%
+              st_drop_geometry() %>%
+              filter(ace_outlet_biodiv_value > 0) %>%
+              select(huc12_id, ace_outlet_biodiv_value, in_gaged_network),
+            by = "huc12_id")
+
+
+
+# Evaluate management objectives coverage for current network ----
+
+
+
+
+
