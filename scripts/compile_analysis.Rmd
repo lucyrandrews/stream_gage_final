@@ -123,7 +123,7 @@ source(here("scripts", "03_analyze_networks", "04_run_set_cover.R"))
 
 ```{r reshape_set_cover, quiet = TRUE, warning = FALSE}
 # reshape set cover results for ease of analysis and visualization
-source(here("scripts", "03_analyze_networks", "05_analyze_coverage.R"))
+source(here("scripts", "03_analyze_networks", "05_analyze_reconfigure_coverage.R"))
 ```
 
 
