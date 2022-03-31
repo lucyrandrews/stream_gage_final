@@ -185,3 +185,16 @@ gages <- gages %>%
 # clean up
 rm(gages_nn, gages_nn_sliced, da_dif_max, da_dif_ratio_max, da_dif_ratio_min,
    nn_search_radius)
+
+
+
+# Clean NA values ----
+
+# update flowlines to clean NA values in NCCAG and reference quality
+flowlines <- flowlines %>%
+  mutate(nccag = case_when(is.na(nccag) ~ 0,
+                           TRUE ~ 1),
+         ref_quality = case_when(is.na(ref_quality) ~ 0,
+                                 TRUE ~ 1),
+         nccag_lengthkm = nccag * lengthkm,
+         ref_quality_lengthkm = ref_quality * lengthkm)
