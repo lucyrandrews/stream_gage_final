@@ -52,3 +52,15 @@ rescale_zero_one <- function(x) {
   x / max(x, na.rm = TRUE)
 
 }
+
+
+
+#' Function that quickly loads spatial data attributes in viewer
+#' 
+#' @param sf_obj An object of class sf
+
+view_flat <- function(sf_obj) {
+  sf_obj %>%
+    st_drop_geometry() %>%
+    View(.)
+}
