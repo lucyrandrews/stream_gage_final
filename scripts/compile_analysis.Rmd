@@ -111,3 +111,19 @@ source(here("scripts", "03_analyze_networks", "02_reshape_network_analysis.R"))
 # run script that compiles the values/costs associated with each gage-comid set
 source(here("scripts", "03_analyze_networks", "03_value_comids_sets.R"))
 ```
+
+## Run set cover analysis
+
+```{r run_set_cover, quiet = TRUE, warning = FALSE}
+# run a greedy set cover to identify efficient sites
+source(here("scripts", "03_analyze_networks", "04_run_set_cover.R"))
+```
+
+## Reshape set cover analysis results
+
+```{r reshape_set_cover, quiet = TRUE, warning = FALSE}
+# reshape set cover results for ease of analysis and visualization
+source(here("scripts", "03_analyze_networks", "05_analyze_coverage.R"))
+```
+
+
