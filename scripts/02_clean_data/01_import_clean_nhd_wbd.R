@@ -61,7 +61,8 @@ huc12s <- st_read(dsn = here("data", "raw_data", "wbd", "Shape"),
   rename(huc12_id = huc12,
          huc12_name = name) %>%
   mutate(huc4_group = str_sub(huc12_id, 1, 4)) %>%
-  select(huc12_id, huc12_name, huc4_group) %>%
+  left_join(st_drop_geometry(huc4s), by = c("huc4_group" = "huc4_id")) %>%
+  select(huc12_id, huc12_name, huc4_group, huc4_name) %>%
   st_intersection(select(ca_boundary, geometry))
 
 
