@@ -4,7 +4,7 @@
 
 # Map simple reconfigured gaged network ----
 
-ca_base_map +
+m <- ca_base_map +
   tm_shape(huc2) +
   tm_fill(col = grey_1) +
   tm_shape(filter(flowlines, streamorde >= 2)) +
@@ -18,6 +18,37 @@ ca_base_map +
   tm_layout(main.title = "Simple Reconfigured Gaged Network",
             main.title.position = "center",
             legend.text.size = 1)
+
+tmap_save(tm = m,
+          filename = here("output", "figures", "simple_reconfig_network.png"))
+
+# create a map of simple reconfigured gaged flowlines colored by value
+m <- ca_base_map +
+  tm_shape(huc2) +
+  tm_fill(col = grey_1) +
+  tm_shape(filter(flowlines, streamorde >= 2)) +
+  tm_lines(col = "flowline_value",
+           palette = "Greys",
+           style = "cont",
+           title.col = "flowline value",
+           breaks = c(0, 3.2),
+           labels = c("lowest value", "highest value")) +
+  tm_shape(filter(flowlines, streamorde >=2, in_simple_reconfig_network)) +
+  tm_lines(col = "flowline_value",
+           palette = get_brewer_pal("Blues", n = 11, contrast = c(0.3, 1)),
+           style = "cont",
+           legend.col.show = FALSE) +
+  tm_add_legend(type = "fill",
+                labels = c("ungaged", "gaged"),
+                col = c(grey_3, dark_blue),
+                border.col = white) +
+  tm_layout(main.title = "Simple Reconfigured Gaged Network",
+            main.title.position = "center",
+            legend.text.size = 1,
+            legend.height = 0.75)
+
+tmap_save(tm = m,
+          filename = here("output", "figures", "simple_reconfig_network_value.png"))
 
 
 
@@ -52,6 +83,9 @@ ca_base_map +
             legend.text.size = 1,
             legend.width = 2)
 
+tmap_save(tm = m,
+          filename = here("output", "figures", "simple_reconfig_ace_outlet.png"))
+
 # make a stacked bar chart of NCCAG coverage
 ggplot(filter(flowlines, nccag == 1)) +
   geom_bar(aes(x = huc4_name,
@@ -68,6 +102,8 @@ ggplot(filter(flowlines, nccag == 1)) +
   theme(axis.text.x = element_text(angle = 60, hjust = 1),
         legend.title = element_blank(),
         plot.title = element_text(hjust = 0.5))
+
+ggsave(here("output", "figures", "simple_reconfig_nccag.png"))
 
 # make a stacked bar chart of reference quality coverage
 ggplot(filter(flowlines, ref_quality == 1)) +
@@ -87,6 +123,8 @@ ggplot(filter(flowlines, ref_quality == 1)) +
         legend.title = element_blank(),
         plot.title = element_text(hjust = 0.5))
 
+ggsave(here("output", "figures", "simple_reconfig_ref_quality.png"))
+
 # make a stacked bar chart of dams coverage
 ggplot(filter(flowlines, nid_dam)) +
   geom_bar(aes(x = huc4_name, fill = in_simple_reconfig_network)) +
@@ -101,11 +139,13 @@ ggplot(filter(flowlines, nid_dam)) +
         legend.title = element_blank(),
         plot.title = element_text(hjust = 0.5))
 
+ggsave(here("output", "figures", "simple_reconfig_dams.png"))
+
 
 
 # Map regionally reconfigured gaged network ----
 
-ca_base_map +
+m <- ca_base_map +
   tm_shape(huc2) +
   tm_fill(col = grey_1) +
   tm_shape(filter(flowlines, streamorde >= 2)) +
@@ -120,7 +160,35 @@ ca_base_map +
             main.title.position = "center",
             legend.text.size = 1)
 
+tmap_save(tm = m,
+          filename = here("output", "figures", "region_reconfig_network.png"))
 
+m <- ca_base_map +
+  tm_shape(huc2) +
+  tm_fill(col = grey_1) +
+  tm_shape(filter(flowlines, streamorde >= 2)) +
+  tm_lines(col = "flowline_value",
+           palette = "Greys",
+           style = "cont",
+           title.col = "flowline value",
+           breaks = c(0, 3.2),
+           labels = c("lowest value", "highest value")) +
+  tm_shape(filter(flowlines, streamorde >=2, in_region_reconfig_network)) +
+  tm_lines(col = "flowline_value",
+           palette = get_brewer_pal("Blues", n = 11, contrast = c(0.3, 1)),
+           style = "cont",
+           legend.col.show = FALSE) +
+  tm_add_legend(type = "fill",
+                labels = c("ungaged", "gaged"),
+                col = c(grey_3, dark_blue),
+                border.col = white) +
+  tm_layout(main.title = "Regionally Reconfigured Gaged Network",
+            main.title.position = "center",
+            legend.text.size = 1,
+            legend.height = 0.75)
+
+tmap_save(tm = m,
+          filename = here("output", "figures", "region_reconfig_network_value.png"))
 
 # Visualize regionally reconfigured network coverage of management objectives ----
 
@@ -153,6 +221,9 @@ ca_base_map +
             legend.text.size = 1,
             legend.width = 2)
 
+tmap_save(tm = m,
+          filename = here("output", "figures", "region_reconfig_ace_outlet.png"))
+
 # make a stacked bar chart of NCCAG coverage
 ggplot(filter(flowlines, nccag == 1)) +
   geom_bar(aes(x = huc4_name,
@@ -169,6 +240,8 @@ ggplot(filter(flowlines, nccag == 1)) +
   theme(axis.text.x = element_text(angle = 60, hjust = 1),
         legend.title = element_blank(),
         plot.title = element_text(hjust = 0.5))
+
+ggsave(here("output", "figures", "region_reconfig_nccag.png"))
 
 # make a stacked bar chart of reference quality coverage
 ggplot(filter(flowlines, ref_quality == 1)) +
@@ -188,6 +261,8 @@ ggplot(filter(flowlines, ref_quality == 1)) +
         legend.title = element_blank(),
         plot.title = element_text(hjust = 0.5))
 
+ggsave(here("output", "figures", "region_reconfig_ref_quality.png"))
+
 # make a stacked bar chart of dams coverage
 ggplot(filter(flowlines, nid_dam)) +
   geom_bar(aes(x = huc4_name, fill = in_region_reconfig_network)) +
@@ -201,3 +276,8 @@ ggplot(filter(flowlines, nid_dam)) +
   theme(axis.text.x = element_text(angle = 60, hjust = 1),
         legend.title = element_blank(),
         plot.title = element_text(hjust = 0.5))
+
+ggsave(here("output", "figures", "region_reconfig_dams.png"))
+
+# clean up
+rm(m)

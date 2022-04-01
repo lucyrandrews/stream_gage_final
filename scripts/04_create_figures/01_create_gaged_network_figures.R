@@ -4,7 +4,7 @@
 
 # Map currently gaged network ----
 
-ca_base_map +
+m <- ca_base_map +
   tm_shape(huc2) +
   tm_fill(col = grey_1) +
   tm_shape(filter(flowlines, streamorde >= 2)) +
@@ -19,12 +19,43 @@ ca_base_map +
             main.title.position = "center",
             legend.text.size = 1)
 
+tmap_save(tm = m,
+          filename = here("output", "figures", "currently_gaged_network.png"))
 
+# create a map of gaged flowlines colored by value
+m <- ca_base_map +
+  tm_shape(huc2) +
+  tm_fill(col = grey_1) +
+  tm_shape(filter(flowlines, streamorde >= 2)) +
+  tm_lines(col = "flowline_value",
+           palette = "Greys",
+           style = "cont",
+           title.col = "flowline value",
+           breaks = c(0, 3.2),
+           labels = c("lowest value", "highest value")) +
+  tm_shape(filter(flowlines, streamorde >=2, in_gaged_network)) +
+  tm_lines(col = "flowline_value",
+           palette = get_brewer_pal("Blues", n = 11, contrast = c(0.3, 1)),
+           style = "cont",
+           legend.col.show = FALSE) +
+  tm_add_legend(type = "fill",
+                labels = c("ungaged", "gaged"),
+                col = c(grey_3, dark_blue),
+                border.col = white) +
+  tm_layout(main.title = "Currently Gaged Network",
+            main.title.position = "center",
+            legend.text.size = 1,
+            legend.height = 0.75)
+
+tmap_save(tm = m,
+          filename = here("output", "figures", "currently_gaged_network_value.png"))
+  
+  
 
 # Visualize gaged network coverage of management objectives ----
 
 # make a map of ACE HUC12 outlet coverage
-ca_base_map +
+m <- ca_base_map +
   tm_shape(ms_simplify(huc12s)) +
   tm_fill(col = white) +
   tm_shape(filter(huc12s, !is.na(ace_outlet_biodiv_value)) %>% ms_simplify()) +
@@ -49,6 +80,9 @@ ca_base_map +
             main.title.position = "center",
             legend.text.size = 1,
             legend.width = 2)
+  
+  tmap_save(tm = m,
+            filename = here("output", "figures", "currently_gaged_ace_outlets.png"))
 
 # make a stacked bar chart of NCCAG coverage
 ggplot(filter(flowlines, nccag == 1)) +
@@ -67,6 +101,8 @@ ggplot(filter(flowlines, nccag == 1)) +
         legend.title = element_blank(),
         plot.title = element_text(hjust = 0.5))
 
+ggsave(filename = here("output", "figures", "currently_gaged_nccag.png"))
+
 # make a stacked bar chart of reference quality coverage
 ggplot(filter(flowlines, ref_quality == 1)) +
   geom_bar(aes(x = huc4_name,
@@ -84,6 +120,8 @@ ggplot(filter(flowlines, ref_quality == 1)) +
         legend.title = element_blank(),
         plot.title = element_text(hjust = 0.5))
 
+ggsave(filename = here("output", "figures", "currently_gaged_ref_quality.png"))
+
 # make a stacked bar chart of dams coverage
 ggplot(filter(flowlines, nid_dam)) +
   geom_bar(aes(x = huc4_name, fill = in_gaged_network)) +
@@ -97,3 +135,8 @@ ggplot(filter(flowlines, nid_dam)) +
   theme(axis.text.x = element_text(angle = 60, hjust = 1),
         legend.title = element_blank(),
         plot.title = element_text(hjust = 0.5))
+
+ggsave(filename = here("output", "figures", "currently_gaged_dams.png"))
+
+# clean up
+rm(m)
