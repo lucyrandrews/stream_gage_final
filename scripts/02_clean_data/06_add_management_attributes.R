@@ -197,4 +197,8 @@ flowlines <- flowlines %>%
          ref_quality = case_when(is.na(ref_quality) ~ 0,
                                  TRUE ~ 1),
          nccag_lengthkm = nccag * lengthkm,
-         ref_quality_lengthkm = ref_quality * lengthkm)
+         ref_quality_lengthkm = ref_quality * lengthkm) %>%
+  rowwise() %>%
+  mutate(flowline_value =
+           sum(ace_aq_biodiv_value, nccag, ref_quality, nid_dam)) %>%
+  ungroup()
