@@ -18,6 +18,10 @@ dark_green <- "#006d2c"
 
 light_yellow <- "#f7fcb9"
 
+mid_blue <- "#6baed6"
+dark_blue <- "#084594"
+
+
 
 # California state base map ----
 
