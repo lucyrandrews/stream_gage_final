@@ -51,6 +51,7 @@ library(ggnewscale)
 library(scales)
 library(ggsn)
 library(ggspatial)
+library(RColorBrewer)
 
 # hydrologic data
 library(nhdR)
