@@ -127,3 +127,11 @@ source(here("scripts", "03_analyze_networks", "05_analyze_reconfigure_coverage.R
 ```
 
 
+
+# Generate figures
+
+```{r generate_figures, quiet = TRUE, warning = FALSE}
+source(here("scripts", "04_create_figures", "01_create_gaged_network_figures.R"))
+source(here("scripts", "04_create_figures", "02_create_reconfig_network_figures.R"))
+```
+
