@@ -17,6 +17,7 @@ mid_green <- "#41ab5d"
 dark_green <- "#006d2c"
 
 light_yellow <- "#f7fcb9"
+mid_yellow <- "#fce436"
 
 mid_blue <- "#6baed6"
 dark_blue <- "#084594"
