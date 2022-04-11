@@ -37,6 +37,7 @@ library(USAboundaries)
 library(rmapshaper)
 library(maptools)
 library(tmap)
+library(tmaptools)
 
 # computation
 library(foreach)
