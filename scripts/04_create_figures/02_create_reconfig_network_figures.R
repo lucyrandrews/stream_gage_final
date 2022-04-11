@@ -7,9 +7,9 @@
 m <- ca_base_map +
   tm_shape(huc2) +
   tm_fill(col = grey_1) +
-  tm_shape(filter(flowlines, streamorde >= 2)) +
+  tm_shape(filter(flowlines, streamorde >= 1)) +
   tm_lines(col = grey_2, lwd = 0.3) +
-  tm_shape(filter(flowlines, streamorde >=2, in_simple_reconfig_network)) +
+  tm_shape(filter(flowlines, streamorde >= 1, in_simple_reconfig_network)) +
   tm_lines(col = mid_green, lwd = 1) +
   tm_add_legend(type = "line",
                 labels = c("ungaged", "gaged"),
@@ -26,14 +26,14 @@ tmap_save(tm = m,
 m <- ca_base_map +
   tm_shape(huc2) +
   tm_fill(col = grey_1) +
-  tm_shape(filter(flowlines, streamorde >= 2)) +
+  tm_shape(filter(flowlines, streamorde >= 1)) +
   tm_lines(col = "flowline_value",
            palette = "Greys",
            style = "cont",
            title.col = "flowline value",
            breaks = c(0, 3.2),
            labels = c("lowest value", "highest value")) +
-  tm_shape(filter(flowlines, streamorde >=2, in_simple_reconfig_network)) +
+  tm_shape(filter(flowlines, streamorde >= 1, in_simple_reconfig_network)) +
   tm_lines(col = "flowline_value",
            palette = get_brewer_pal("Blues", n = 11, contrast = c(0.3, 1)),
            style = "cont",
@@ -148,9 +148,9 @@ ggsave(here("output", "figures", "simple_reconfig_dams.png"))
 m <- ca_base_map +
   tm_shape(huc2) +
   tm_fill(col = grey_1) +
-  tm_shape(filter(flowlines, streamorde >= 2)) +
+  tm_shape(filter(flowlines, streamorde >= 1)) +
   tm_lines(col = grey_2, lwd = 0.3) +
-  tm_shape(filter(flowlines, streamorde >=2, in_region_reconfig_network)) +
+  tm_shape(filter(flowlines, streamorde >= 1, in_region_reconfig_network)) +
   tm_lines(col = mid_green, lwd = 1) +
   tm_add_legend(type = "line",
                 labels = c("ungaged", "gaged"),
@@ -166,14 +166,14 @@ tmap_save(tm = m,
 m <- ca_base_map +
   tm_shape(huc2) +
   tm_fill(col = grey_1) +
-  tm_shape(filter(flowlines, streamorde >= 2)) +
+  tm_shape(filter(flowlines, streamorde >= 1)) +
   tm_lines(col = "flowline_value",
            palette = "Greys",
            style = "cont",
            title.col = "flowline value",
            breaks = c(0, 3.2),
            labels = c("lowest value", "highest value")) +
-  tm_shape(filter(flowlines, streamorde >=2, in_region_reconfig_network)) +
+  tm_shape(filter(flowlines, streamorde >= 1, in_region_reconfig_network)) +
   tm_lines(col = "flowline_value",
            palette = get_brewer_pal("Blues", n = 11, contrast = c(0.3, 1)),
            style = "cont",

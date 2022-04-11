@@ -7,15 +7,25 @@
 m <- ca_base_map +
   tm_shape(huc2) +
   tm_fill(col = grey_1) +
-  tm_shape(filter(flowlines, streamorde >= 2)) +
+  tm_shape(filter(flowlines, streamorde >= 1)) +
   tm_lines(col = grey_2, lwd = 0.3) +
-  tm_shape(filter(flowlines, streamorde >=2, in_gaged_network)) +
+  tm_shape(filter(flowlines, streamorde >= 1, in_gaged_network)) +
   tm_lines(col = mid_green, lwd = 1) +
+  tm_shape(dams) +
+  tm_dots(col = "in_gaged_network",
+          palette = c(grey_3, dark_green),
+          size = 0.1,
+          legend.show = FALSE) +
   tm_add_legend(type = "line",
-                labels = c("ungaged", "gaged"),
+                labels = c("ungaged stream", "gaged stream"),
                 col = c(grey_3, mid_green),
                 lwd = 2) +
-  tm_layout(main.title = "Currently Gaged Network",
+  tm_add_legend(type = "symbol",
+                labels = c("ungaged dam", "gaged dam"),
+                col = c(grey_3, dark_green),
+                border.col = NULL,
+                size = 1) +
+  tm_layout(main.title = "Currently Gaged Network and Dams",
             main.title.position = "center",
             legend.text.size = 1)
 
@@ -26,14 +36,14 @@ tmap_save(tm = m,
 m <- ca_base_map +
   tm_shape(huc2) +
   tm_fill(col = grey_1) +
-  tm_shape(filter(flowlines, streamorde >= 2)) +
+  tm_shape(filter(flowlines, streamorde >= 1)) +
   tm_lines(col = "flowline_value",
            palette = "Greys",
            style = "cont",
            title.col = "flowline value",
            breaks = c(0, 3.2),
            labels = c("lowest value", "highest value")) +
-  tm_shape(filter(flowlines, streamorde >=2, in_gaged_network)) +
+  tm_shape(filter(flowlines, streamorde >= 1, in_gaged_network)) +
   tm_lines(col = "flowline_value",
            palette = get_brewer_pal("Blues", n = 11, contrast = c(0.3, 1)),
            style = "cont",
