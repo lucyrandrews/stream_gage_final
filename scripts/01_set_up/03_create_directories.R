@@ -32,6 +32,9 @@ if(!dir.exists(here("output", "figures"))) {
   dir.create(here("output", "figures"))
 }
 
+if(!dir.exists(here("output", "text"))) {
+  dir.create(here("output", "text"))
+}
 
 
 # Download locations
