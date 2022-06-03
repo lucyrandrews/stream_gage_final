@@ -55,7 +55,7 @@ tmap_save(tm = m,
 # Visualize simple reconfigured network coverage of management objectives ----
 
 # make a map of ACE HUC12 outlet coverage
-ca_base_map +
+m <- ca_base_map +
   tm_shape(ms_simplify(huc12s)) +
   tm_fill(col = white) +
   tm_shape(filter(huc12s, !is.na(ace_outlet_biodiv_value)) %>% ms_simplify()) +
@@ -193,7 +193,7 @@ tmap_save(tm = m,
 # Visualize regionally reconfigured network coverage of management objectives ----
 
 # make a map of ACE HUC12 outlet coverage
-ca_base_map +
+m <- ca_base_map +
   tm_shape(ms_simplify(huc12s)) +
   tm_fill(col = white) +
   tm_shape(filter(huc12s, !is.na(ace_outlet_biodiv_value)) %>% ms_simplify()) +
