@@ -18,8 +18,11 @@ source(here("scripts", "01_set_up", "03_create_directories.R"))
 source(here("scripts", "01_set_up", "04_build_functions.R"))
 source(here("scripts", "01_set_up", "05_build_base_maps.R"))
 
+# indicate whether to use TNC gage data or only USGS GAGESII data
+tnc_data <- TRUE
+
 # indicate whether to use pre-processed data
-load_data <- TRUE
+load_data <- FALSE
 ```
 
 
@@ -31,7 +34,7 @@ load_data <- TRUE
 
 ```{r import_clean_data, quiet = TRUE, warning = FALSE}
 # import Watershed Boundary Dataset and National Hydrography Dataset objects
-source(here("scripts", "02_clean_data", "01_import_clean_nhd_wbd.R"))
+source(here("scripts", "02_clean_data", "01_import_clean_nhd_wbd_gages.R"))
 ```
 
 ## Import data describing management-relevant attributes
@@ -128,10 +131,12 @@ source(here("scripts", "03_analyze_networks", "05_analyze_reconfigure_coverage.R
 
 
 
-# Generate figures
+# Generate text and figures output
 
 ```{r generate_figures, quiet = TRUE, warning = FALSE}
-source(here("scripts", "04_create_figures", "01_create_gaged_network_figures.R"))
-source(here("scripts", "04_create_figures", "02_create_reconfig_network_figures.R"))
+source(here("scripts", "04_create_output", "01_create_text_output.R"))
+source(here("scripts", "04_create_output", "02_create_gaged_network_figures.R"))
+source(here("scripts", "04_create_output", "03_create_reconfig_network_figures.R"))
+source(here("scripts", "04_create_output", "04_create_comparison_figures.R"))
 ```
 
