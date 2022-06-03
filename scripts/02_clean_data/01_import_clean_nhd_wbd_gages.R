@@ -2,7 +2,9 @@
 
 # This scripts downloads, imports, and cleans USGS Watershed Boundary Dataset
 # (WBD) and National Hydrography Dataset (NHD) spatial products that represent
-# watershed realizations and stream channel realizations, respectively
+# watershed realizations and stream channel realizations, respectively. It also
+# reads in gage data from either the USGS GAGESII dataset embedded in the NHD
+# or from The Nature Conservancy's 2019 Gage Gap analysis.
 
 # Create directories ----
 
@@ -180,8 +182,45 @@ rm(huc12_outlet_comids)
 
 
 
-# Import NHD gage data
-gages <- get_gagesII(AOI = ca_boundary) %>%
-  rename(gage_id = id,
-         gage_totdasqkm = drain_sqkm) %>%
-  rowid_to_column(var = "gage_index")
+# Import gage data ----
+
+# if not using TNC data, load GAGESII data from NHD
+if(!tnc_data) {
+  
+  gages <- get_gagesII(AOI = ca_boundary) %>%
+    rename(gage_id = id,
+           gage_totdasqkm = drain_sqkm) %>%
+    rowid_to_column(var = "gage_index")
+  
+} else { # otherwise, download and import TNC gage database
+  
+  # create TNC gage directory
+  if(!dir.exists(here("data", "raw_data", "tnc_gages"))) {
+    dir.create(here("data", "raw_data", "tnc_gages"))
+  }
+  
+  # download TNC gage data as zipped file
+  if(!file.exists(here("data", "raw_data", "tnc_gages", "GageGapII_DataDownload.zip"))) {
+    
+    tnc_url <- "https://www.dropbox.com/s/u6gabpthge8h22v/GageGapII_DataDownload.zip?dl=1"
+    
+    download.file(url = tnc_url,
+                  destfile = here("data", "raw_data", "tnc_gages", "GageGapII_DataDownload.zip"))
+    
+    rm(tnc_url)
+    
+  }
+  
+  # unzip TNC gages zipped file
+  unzip(zipfile = here("data", "raw_data", "tnc_gages", "GageGapII_DataDownload.zip"),
+        exdir = here("data", "raw_data", "tnc_gages"))
+  
+  # import TNC gages as sf object
+  gages <- st_read(here("data", "raw_data", "tnc_gages", "Gages_GGII.shp")) %>%
+    st_transform(crs = global_crs) %>%
+    filter(GageStyle == "Active") %>%
+    rename(gage_totdasqkm = TotDASqKM) %>%
+    rowid_to_column(var = "gage_index")
+  
+}
+
