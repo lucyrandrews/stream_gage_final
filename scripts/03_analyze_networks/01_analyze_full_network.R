@@ -53,7 +53,6 @@ comids_split <- flowlines %>%
   split(.$split_num) %>%
   set_names(paste0("split_", as.list(1:n_cores)))
 
-
 lapply(names(comids_split),
        function(x) {
          write_csv(comids_split[[x]],
