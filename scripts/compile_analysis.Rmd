@@ -22,7 +22,15 @@ source(here("scripts", "01_set_up", "05_build_base_maps.R"))
 tnc_data <- TRUE
 
 # indicate whether to use pre-processed data
-load_data <- FALSE
+load_data <- TRUE
+
+# indicate which site attributes to use in assessing value
+# note that attributes data will still be imported; it just won't be used in
+# assigning value to gages
+use_ace <- TRUE
+use_nccag <- FALSE
+use_ref_streams <- TRUE
+use_dams <- TRUE
 ```
 
 
