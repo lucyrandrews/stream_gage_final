@@ -200,5 +200,8 @@ flowlines <- flowlines %>%
          ref_quality_lengthkm = ref_quality * lengthkm) %>%
   rowwise() %>%
   mutate(flowline_value =
-           sum(ace_aq_biodiv_value, nccag, ref_quality, nid_dam)) %>%
+           sum((ace_aq_biodiv_value * use_ace),
+               (nccag * use_nccag),
+               (ref_quality * use_ref_streams),
+               (nid_dam * use_dams))) %>%
   ungroup()

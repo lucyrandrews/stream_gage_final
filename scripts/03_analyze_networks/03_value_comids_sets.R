@@ -72,7 +72,10 @@ set_costs[set_costs == 1.5] <- 1.0
 # analysis
 set_costs <- set_costs %>%
   rowwise() %>%
-  mutate(set_value = sum(ace_outlet_biodiv_value, nccag, ref_quality, nid_dam)) %>%
+  mutate(set_value = sum((ace_outlet_biodiv_value * use_ace),
+                         (nccag * use_nccag),
+                         (ref_quality * use_ref_streams),
+                         (nid_dam * use_dams))) %>%
   ungroup() %>%
   rowid_to_column(var = "set_id") %>%
   left_join(st_drop_geometry(select(flowlines, comid, huc4_group)),
