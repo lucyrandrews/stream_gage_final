@@ -185,3 +185,18 @@ flowlines %>%
 
 # stop writing to .txt file
 sink(file = NULL)
+
+
+
+# Create and save a figure of the HUC2 watershed boundary ----
+
+m <- ca_base_map +
+  tm_shape(huc2) +
+  tm_fill(col = grey_2) +
+  tm_add_legend(type = "fill",
+                labels = "California HUC2 watershed",
+                col = grey_2,
+                border.col = NULL)
+
+tmap_save(tm = m,
+          filename = here("output", "figures", "ca_huc2.png"))
