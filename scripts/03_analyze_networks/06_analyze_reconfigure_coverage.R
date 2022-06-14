@@ -6,7 +6,7 @@
 # Produce data products summarizing results ----
 
 # identify gaged network flowlines
-gaged_comids <- network_analysis_long %>%
+gaged_comids <- network_analysis_long_all %>%
   filter(gage_comid %in% gages$comid) %>%
   select(comid) %>%
   unique() %>%
@@ -14,6 +14,21 @@ gaged_comids <- network_analysis_long %>%
 
 flowlines <- flowlines %>%
   mutate(in_gaged_network = comid %in% gaged_comids)
+
+# identify top-n most valuable expansion sets
+expansion_sets <- set_costs_expansion %>%
+  slice_max(order_by = set_value, n = n_expansion, with_ties = FALSE)
+
+# identify top-n expansion network comids
+expansion_comids <- network_analysis_long_expansion %>%
+  filter(gage_comid %in% expansion_sets$gage_comid) %>%
+  pull(comid) %>%
+  unique()
+
+# identify expansion network flowlines
+flowlines <- flowlines %>%
+  mutate(in_expansion_network = comid %in% expansion_comids,
+         has_expansion_gage = comid %in% expansion_sets$gage_comid)
 
 # update HUC12 polygons to list gaged coverage status, outlet comid, and ACE
 # value
@@ -29,17 +44,18 @@ huc12s <- huc12s %>%
 # Create reconfigured networks ----
 
 # start with a simple network - top-value gages independent of region
-simple_reconfig_sets <- set_costs %>%
-  filter(gage_comid %in% set_cover_output$gage_comid) %>%
-  slice_max(order_by = set_value, n = nrow(gages))
+simple_reconfig_sets <- set_costs_all %>%
+  filter(gage_comid %in% set_cover_output_all$gage_comid) %>%
+  slice_max(order_by = set_value, n = nrow(gages), with_ties = FALSE)
 
-simple_reconfig_comids <- network_analysis_long %>%
+simple_reconfig_comids <- network_analysis_long_all %>%
   filter(gage_comid %in% simple_reconfig_sets$gage_comid) %>%
   pull(comid) %>%
   unique()
 
 flowlines <- flowlines %>% 
-  mutate(in_simple_reconfig_network = comid %in% simple_reconfig_comids)
+  mutate(in_simple_reconfig_network = comid %in% simple_reconfig_comids,
+         has_simple_reconfig_network_gage = comid %in% simple_reconfig_sets$gage_comid)
 
 # now for a network with gages distributed across HUC4 regions, proportional to
 # the stream length in each region; ceiling round to start, since regular
@@ -62,9 +78,9 @@ for(huc4 in huc4_lengths$huc4_group) {
     filter(huc4_group == huc4) %>%
     pull(reconfig_gage_count)
     
-  sets_to_bind <- set_costs %>%
+  sets_to_bind <- set_costs_all %>%
     filter(huc4_group == huc4,
-           gage_comid %in% set_cover_output$gage_comid) %>%
+           gage_comid %in% set_cover_output_all$gage_comid) %>%
     slice_max(order_by = set_value, n = gage_count, with_ties = FALSE)
   
   region_reconfig_sets <- rbind(region_reconfig_sets, sets_to_bind)
@@ -80,14 +96,15 @@ region_reconfig_sets <- region_reconfig_sets %>%
   head(nrow(simple_reconfig_sets))
 
 # grab reconfigured gaged comids
-region_reconfig_comids <- network_analysis_long %>%
+region_reconfig_comids <- network_analysis_long_all %>%
   filter(gage_comid %in% region_reconfig_sets$gage_comid) %>%
   pull(comid) %>%
   unique()
 
 # add region reconfiguration to flowlines
 flowlines <- flowlines %>% 
-  mutate(in_region_reconfig_network = comid %in% region_reconfig_comids)
+  mutate(in_region_reconfig_network = comid %in% region_reconfig_comids,
+         has_region_reconfig_gage = comid %in% region_reconfig_sets$gage_comid)
 
 
 

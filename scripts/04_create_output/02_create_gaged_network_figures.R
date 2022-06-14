@@ -4,6 +4,7 @@
 
 # Map currently gaged network ----
 
+# create map without dams
 m <- ca_base_map +
   tm_shape(huc2) +
   tm_fill(col = grey_1) +
@@ -11,21 +12,13 @@ m <- ca_base_map +
   tm_lines(col = grey_2, lwd = 0.3) +
   tm_shape(filter(flowlines, streamorde >= 1, in_gaged_network)) +
   tm_lines(col = mid_green, lwd = 1) +
-  tm_shape(dams) +
-  tm_dots(col = "in_gaged_network",
-          palette = c(grey_3, dark_green),
-          size = 0.1,
-          legend.show = FALSE) +
+  tm_shape(filter(flowlines, streamorde >= 1, in_expansion_network)) +
+  tm_lines(col = mid_green, lwd = 1)
   tm_add_legend(type = "line",
                 labels = c("ungaged stream", "gaged stream"),
                 col = c(grey_3, mid_green),
                 lwd = 2) +
-  tm_add_legend(type = "symbol",
-                labels = c("ungaged dam", "gaged dam"),
-                col = c(grey_3, dark_green),
-                border.col = NULL,
-                size = 1) +
-  tm_layout(main.title = "Currently Gaged Network and Dams",
+  tm_layout(main.title = "Currently Gaged and Expansion Networks",
             main.title.position = "center",
             legend.text.size = 1)
 

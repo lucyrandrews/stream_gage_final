@@ -31,6 +31,9 @@ use_ace <- TRUE
 use_nccag <- FALSE
 use_ref_streams <- TRUE
 use_dams <- TRUE
+
+# indicate how many expansion sites to grab
+n_expansion <- 100
 ```
 
 
@@ -116,25 +119,32 @@ source(here("scripts", "03_analyze_networks", "02_reshape_network_analysis.R"))
 
 # Run set-cover analysis
 
-## Assign value to each comid and cost to each set
+## Run set cover analysis for top-n expansion sites
+
+```{r run_set_cover_expansion, quiet = TRUE, warning = FALSE}
+# run script that compiles the values/costs associated with each gage-comid set
+source(here("scripts", "03_analyze_networks", "03_run_set_cover_expansion.R"))
+```
+
+## Run set cover analysis for network reconfiguring
+
+```{r run_set_cover_all, quiet = TRUE, warning = FALSE}
+# run a greedy set cover to identify efficient sites
+source(here("scripts", "03_analyze_networks", "04_run_set_cover_all.R"))
+```
+
+## Assign value to each comid and cost to each set for networks
 
 ```{r assign_set_costs, quiet = TRUE, warning = FALSE}
 # run script that compiles the values/costs associated with each gage-comid set
-source(here("scripts", "03_analyze_networks", "03_value_comids_sets.R"))
-```
-
-## Run set cover analysis
-
-```{r run_set_cover, quiet = TRUE, warning = FALSE}
-# run a greedy set cover to identify efficient sites
-source(here("scripts", "03_analyze_networks", "04_run_set_cover.R"))
+source(here("scripts", "03_analyze_networks", "05_value_comids_sets.R"))
 ```
 
 ## Reshape set cover analysis results
 
 ```{r reshape_set_cover, quiet = TRUE, warning = FALSE}
 # reshape set cover results for ease of analysis and visualization
-source(here("scripts", "03_analyze_networks", "05_analyze_reconfigure_coverage.R"))
+source(here("scripts", "03_analyze_networks", "06_analyze_reconfigure_coverage.R"))
 ```
 
 
