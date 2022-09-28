@@ -75,6 +75,16 @@ network_analysis_long <- rbind(network_analysis_long_up,
   left_join(st_drop_geometry(select(flowlines, comid, huc4_group)),
             by = c("gage_comid" = "comid"))
 
+# identify gaged network flowlines
+gaged_comids <- network_analysis_long %>%
+  filter(gage_comid %in% gages$comid) %>%
+  select(comid) %>%
+  unique() %>%
+  pull()
+
+flowlines <- flowlines %>%
+  mutate(in_gaged_network = comid %in% gaged_comids)
+
 # clean up
 rm(network_analysis_long_down, network_analysis_long_up,
    network_analysis_long_on, comid, gage_comid, gage_location)

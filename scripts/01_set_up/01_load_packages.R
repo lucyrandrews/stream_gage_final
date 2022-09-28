@@ -53,6 +53,7 @@ library(scales)
 library(ggsn)
 library(ggspatial)
 library(RColorBrewer)
+library(forcats)
 
 # hydrologic data
 library(nhdR)

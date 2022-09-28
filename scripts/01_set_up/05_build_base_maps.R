@@ -18,9 +18,14 @@ dark_green <- "#006d2c"
 
 light_yellow <- "#f7fcb9"
 mid_yellow <- "#fce436"
+dark_yellow <- "#dfbc2d"
 
 mid_blue <- "#6baed6"
 dark_blue <- "#084594"
+
+mid_purple <- "#756bb1"
+
+mid_orange <- "#fe9929"
 
 
 
@@ -34,14 +39,14 @@ ca_base_map <- tm_shape(shp = ca_boundary) +
   tm_polygons(col = white) +
   tm_compass(position = c("left", "bottom"),
              text.size = 0.75,
-             text.color = grey_5,
-             color.light = grey_3,
-             color.dark = grey_5) +
+             text.color = grey_4,
+             color.light = grey_1,
+             color.dark = grey_4) +
   tm_scale_bar(position = c("left", "bottom"),
                breaks = c(0, 50, 100, 150, 200),
                text.size = 0.75,
-               text.color = grey_5,
-               color.light = grey_3,
-               color.dark = grey_5) +
+               text.color = grey_4,
+               color.light = grey_1,
+               color.dark = grey_4) +
   tm_layout(frame = FALSE)
 

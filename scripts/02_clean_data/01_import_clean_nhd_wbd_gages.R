@@ -72,13 +72,18 @@ huc12s <- st_read(dsn = here("data", "raw_data", "wbd", "Shape"),
 # Download NHD products ----
 
 # download flowlines
-nhd_plus_get(vpu = 18, component = "NHDSnapshot")
+# note: Sept 7 - NHD API returns 403 error code (unauthorized) so adding `try`
+# wrapper; if running code for first time, will hit issues if files aren't
+# already locally available
+try(nhd_plus_get(vpu = 18, component = "NHDSnapshot"), silent = FALSE)
 
 # download flowline attributes
-nhd_plus_get(vpu = 18, component = "NHDPlusAttributes")
+try(nhd_plus_get(vpu = 18, component = "NHDPlusAttributes"), silent = FALSE)
 
 # download hydrologic and climatologic attributes
-nhd_plus_get(vpu = 18, component = "EROMExtension")
+try(nhd_plus_get(vpu = 18, component = "EROMExtension"), silent = FALSE)
+
+try(closeAllConnections())
 
 
 
@@ -114,6 +119,8 @@ flowlines <- flowlines %>%
   left_join(select(erom_extension, -AreaSqKm, -DivDASqKm),
             by = c("COMID" = "ComID")) %>%
   rename(est_discharge_cfs = Q0001E) %>%
+  # 1 cfs = 723.968 af/year
+  mutate(est_annual_discharge_af = est_discharge_cfs * 723.968) %>%
   rename_with(.fn = tolower, .cols = everything()) %>%
   filter(!is.na(totdasqkm),
          !ftype %in% drop_ftypes,
@@ -127,7 +134,7 @@ keep_flowlines_colnames <- c("comid", "ftype", "streamorde", "gnis_name",
                              "uplevelpat", "uphydroseq", "dnlevelpat",
                              "dnminorhyd", "dnhydroseq", "frommeas", "tomeas",
                              "reachcode", "lengthkm", "totdasqkm",
-                             "est_discharge_cfs")
+                             "est_discharge_cfs", "est_annual_discharge_af")
 
 # keep only specified columns
 flowlines <- flowlines %>%

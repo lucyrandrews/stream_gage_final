@@ -8,7 +8,8 @@
 
 # prep set cover input dataframe
 set_cover_input_expansion <- network_analysis_long %>%
-  filter(!gage_comid %in% gages$comid) %>%
+  filter(!gage_comid %in% gages$comid,
+         !comid %in% gaged_comids) %>%
   select(gage_comid, comid) %>%
   rename(set = gage_comid,
          element = comid)

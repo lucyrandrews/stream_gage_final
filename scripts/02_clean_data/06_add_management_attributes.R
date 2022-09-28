@@ -14,8 +14,10 @@
 #         > {0, 1}
 #   - Dams: large dams listed in the United States Army Corps of Engineers  
 #       National Inventory of Dams (NID) for which flow monitoring can lend
-#       useful water release management information  
+#       useful water release management information, including weighting option
+#       for degree of regulation
 #         > {0, 1}
+#         > DoR: [0, 1]
 #   - Gages: gages operated by USGS and listed in the GagesII dataset maintained
 #       in the National Hydrography Dataset
 #         > {0, 1}
@@ -66,13 +68,16 @@ flowlines_indexing <- flowlines %>%
   rename(COMID = comid,
          REACHCODE = reachcode,
          ToMeas = tomeas,
-         FromMeas = frommeas)
+         FromMeas = frommeas) %>%
+  st_cast(to = "MULTILINESTRING")
 
 # search for neighbors with a distance tolerance
+# set `precision` argument to `NA` due to run-time issues; this means that
+# dams are matching to nearby flowline nodes (upstream and downstream ends)
 nid_nn <- get_flowline_index(flines = flowlines_indexing,
                              points = st_cast(x = nid, to = "POINT"),
                              search_radius = nn_search_radius,
-                             precision = 10,
+                             precision = NA,
                              # max_matches is a large number to grab all matches
                              max_matches = 100) %>%
   rename(nid_index = id,
@@ -116,7 +121,9 @@ nid_nn_sliced <- flowlines %>%
 
 # associate flowlines with dams
 flowlines <- flowlines %>%
-  mutate(nid_dam = comid %in% nid_nn_sliced$comid)
+  mutate(nid_dam = comid %in% nid_nn_sliced$comid) %>%
+  left_join(select(nid_nn_sliced, comid, nid_storage_af), by = "comid") %>%
+  mutate(degree_of_reg = nid_storage_af / est_annual_discharge_af)
 
 # clean up
 rm(nid, nid_nn, nid_nn_sliced)
@@ -126,10 +133,11 @@ rm(nid, nid_nn, nid_nn_sliced)
 # Associate gages with flowlines ----
 
 # search for neighbors with a distance tolerance
+# same run-time issue as before (with dams) addressed with `precision = NA`
 gages_nn <- get_flowline_index(flines = flowlines_indexing,
                                points = gages,
                                search_radius = nn_search_radius,
-                               precision = 10,
+                               precision = NA,
                                # max_matches is a large number to grab all matches
                                max_matches = 100) %>%
   rename(gage_index = id,
@@ -188,7 +196,7 @@ rm(gages_nn, gages_nn_sliced, da_dif_max, da_dif_ratio_max, da_dif_ratio_min,
 
 
 
-# Clean NA values ----
+# Clean NA, Inf, and Extreme values ----
 
 # update flowlines to clean NA values in NCCAG and reference quality
 flowlines <- flowlines %>%
@@ -197,7 +205,9 @@ flowlines <- flowlines %>%
          ref_quality = case_when(is.na(ref_quality) ~ 0,
                                  TRUE ~ 1),
          nccag_lengthkm = nccag * lengthkm,
-         ref_quality_lengthkm = ref_quality * lengthkm) %>%
+         ref_quality_lengthkm = ref_quality * lengthkm,
+         degree_of_reg = case_when(is.na(degree_of_reg) ~ 0,
+                                   TRUE ~ degree_of_reg)) %>%
   rowwise() %>%
   mutate(flowline_value =
            sum((ace_aq_biodiv_value * use_ace),
@@ -205,3 +215,11 @@ flowlines <- flowlines %>%
                (ref_quality * use_ref_streams),
                (nid_dam * use_dams))) %>%
   ungroup()
+
+# update flowlines to clean infinite values in degree of regulation
+flowlines <- flowlines %>%
+  mutate(degree_of_reg = ifelse(is.finite(degree_of_reg), degree_of_reg, 0))
+
+# update flowlines to cap degree of regulation at 1.0 for points system
+flowlines <- flowlines %>%
+  mutate(degree_of_reg = ifelse(degree_of_reg <= 1.0, degree_of_reg, 1.0))

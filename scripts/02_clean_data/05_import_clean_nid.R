@@ -40,7 +40,8 @@ if(!file.exists(here("data", "raw_data", "nid", "nid_ca.csv"))) {
 nid <- read_csv(file = here("data", "raw_data", "nid", "nid_ca.csv"),
                 skip = 1) %>%
   rename(nid_id = 'NID ID',
-         nid_totdasqmi = 'Drainage Area (Sq Miles)') %>%
+         nid_totdasqmi = 'Drainage Area (Sq Miles)',
+         nid_storage_af = 'NID Storage (Acre-Ft)') %>%
   mutate(nid_totdasqkm = convert(vector = nid_totdasqmi,
                                  origin = "mi2",
                                  target = "km2")) %>%
@@ -48,10 +49,13 @@ nid <- read_csv(file = here("data", "raw_data", "nid", "nid_ca.csv"),
          nid_totdasqkm > min_nid_dasqkm) %>%
   st_as_sf(coords = c("Longitude", "Latitude"),
            crs = global_crs) %>%
-  select(nid_id, nid_totdasqkm) %>%
+  select(nid_id, nid_totdasqkm, nid_storage_af) %>%
   group_by(nid_id) %>%
-  summarize(nid_totdasqkm = max(nid_totdasqkm)) %>%
+  summarize(nid_totdasqkm = max(nid_totdasqkm),
+            nid_storage_af = max(nid_storage_af)) %>%
   rowid_to_column(var = "nid_index")
+
+nid <- st_cast(nid, to = "POINT")
 
 # clean up
 rm(min_nid_dasqkm)

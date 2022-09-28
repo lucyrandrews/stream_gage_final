@@ -17,18 +17,34 @@ flowlines <- flowlines %>%
 
 # identify top-n most valuable expansion sets
 expansion_sets <- set_costs_expansion %>%
-  slice_max(order_by = set_value, n = n_expansion, with_ties = FALSE)
+  slice_max(order_by = set_value, n = n_expansion, with_ties = TRUE) %>%
+  rowid_to_column(var = "expansion_set_index_ordered") %>%
+  mutate(expansion_50 = ifelse(expansion_set_index_ordered <= 50, TRUE, FALSE),
+         expansion_100 = ifelse(expansion_set_index_ordered <= 100, TRUE, FALSE),
+         expansion_500 = ifelse(expansion_set_index_ordered <= 500, TRUE, FALSE),
+         expansion_set = factor(case_when(expansion_set_index_ordered <= 50 ~ "expansion_50",
+                                          expansion_set_index_ordered <= 100 ~ "expansion_100",
+                                          expansion_set_index_ordered <= 500 ~ "expansion_500",
+                                          TRUE ~ NA_character_),
+                                levels = c("expansion_50", "expansion_100", "expansion_500")))
 
 # identify top-n expansion network comids
 expansion_comids <- network_analysis_long_expansion %>%
-  filter(gage_comid %in% expansion_sets$gage_comid) %>%
-  pull(comid) %>%
-  unique()
+  left_join(select(expansion_sets, gage_comid, expansion_set),
+            by = "gage_comid") %>%
+  filter(!is.na(expansion_set)) %>%
+  arrange(comid, expansion_set) %>%
+  distinct(comid, .keep_all = TRUE) %>%
+  mutate(in_expansion_network = TRUE,
+         has_expansion_gage = case_when(gage_location == "on comid" ~ TRUE,
+                                        TRUE ~ FALSE))
+
+### START HERE ###
 
 # identify expansion network flowlines
 flowlines <- flowlines %>%
-  mutate(in_expansion_network = comid %in% expansion_comids,
-         has_expansion_gage = comid %in% expansion_sets$gage_comid)
+  left_join(select(expansion_comids, comid, expansion_set, has_expansion_gage, in_expansion_network),
+            by = "comid")
 
 # update HUC12 polygons to list gaged coverage status, outlet comid, and ACE
 # value
@@ -36,7 +52,11 @@ huc12s <- huc12s %>%
   left_join(flowlines %>%
               st_drop_geometry() %>%
               filter(ace_outlet_biodiv_value > 0) %>%
-              select(huc12_id, comid, ace_outlet_biodiv_value, in_gaged_network),
+              select(huc12_id,
+                     comid,
+                     ace_outlet_biodiv_value,
+                     in_gaged_network,
+                     in_expansion_network),
             by = "huc12_id")
 
 
@@ -44,11 +64,11 @@ huc12s <- huc12s %>%
 # Create reconfigured networks ----
 
 # start with a simple network - top-value gages independent of region
-simple_reconfig_sets <- set_costs_all %>%
+simple_reconfig_sets <- set_costs_reconfig %>%
   filter(gage_comid %in% set_cover_output_all$gage_comid) %>%
   slice_max(order_by = set_value, n = nrow(gages), with_ties = FALSE)
 
-simple_reconfig_comids <- network_analysis_long_all %>%
+simple_reconfig_comids <- network_analysis_long_reconfig %>%
   filter(gage_comid %in% simple_reconfig_sets$gage_comid) %>%
   pull(comid) %>%
   unique()
@@ -96,7 +116,7 @@ region_reconfig_sets <- region_reconfig_sets %>%
   head(nrow(simple_reconfig_sets))
 
 # grab reconfigured gaged comids
-region_reconfig_comids <- network_analysis_long_all %>%
+region_reconfig_comids <- network_analysis_long_reconfig %>%
   filter(gage_comid %in% region_reconfig_sets$gage_comid) %>%
   pull(comid) %>%
   unique()
@@ -118,3 +138,10 @@ dams <- flowlines_midpoints %>%
                select(comid, in_gaged_network, in_simple_reconfig_network,
                       in_region_reconfig_network),
              by = "comid")
+
+# create single column of currently gaged vs. expansion gaged status
+flowlines <- flowlines %>%
+  mutate(gaged_vs_expansion = case_when(in_gaged_network ~ "gaged network",
+                                        in_expansion_network ~ "expansion network",
+                                        TRUE ~ "ungaged network") %>%
+           factor(levels = c("ungaged network", "expansion network", "gaged network")))
