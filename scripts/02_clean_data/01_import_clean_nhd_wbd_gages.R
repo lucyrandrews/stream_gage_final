@@ -231,3 +231,10 @@ if(!tnc_data) {
   
 }
 
+
+# join in hydrologic regions that match flowline hydrologic region coding
+gages <- gages %>%
+  mutate(HUC4 = substr(HUC8, 1, 4)) %>%
+  left_join(st_drop_geometry(flowlines) %>% select(huc4_group, huc4_name) %>% distinct(),
+            by = c("HUC4" = "huc4_group")) %>%
+  mutate(huc4_group = replace_na(huc4_name, "North Lahontan"))

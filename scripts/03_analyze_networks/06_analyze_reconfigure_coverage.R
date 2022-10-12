@@ -17,7 +17,9 @@ flowlines <- flowlines %>%
 
 # identify top-n most valuable expansion sets
 expansion_sets <- set_costs_expansion %>%
-  slice_max(order_by = set_value, n = n_expansion, with_ties = TRUE) %>%
+  distinct() %>%
+  arrange(-set_value, -length_gaged) %>%
+  slice(1:500) %>%
   rowid_to_column(var = "expansion_set_index_ordered") %>%
   mutate(expansion_50 = ifelse(expansion_set_index_ordered <= 50, TRUE, FALSE),
          expansion_100 = ifelse(expansion_set_index_ordered <= 100, TRUE, FALSE),
@@ -30,20 +32,19 @@ expansion_sets <- set_costs_expansion %>%
 
 # identify top-n expansion network comids
 expansion_comids <- network_analysis_long_expansion %>%
-  left_join(select(expansion_sets, gage_comid, expansion_set),
+  left_join(select(expansion_sets, gage_comid, expansion_set, expansion_set_index_ordered),
             by = "gage_comid") %>%
   filter(!is.na(expansion_set)) %>%
-  arrange(comid, expansion_set) %>%
+  arrange(comid, expansion_set_index_ordered) %>%
   distinct(comid, .keep_all = TRUE) %>%
   mutate(in_expansion_network = TRUE,
          has_expansion_gage = case_when(gage_location == "on comid" ~ TRUE,
                                         TRUE ~ FALSE))
 
-### START HERE ###
-
 # identify expansion network flowlines
 flowlines <- flowlines %>%
-  left_join(select(expansion_comids, comid, expansion_set, has_expansion_gage, in_expansion_network),
+  left_join(select(expansion_comids, comid, expansion_set, expansion_set_index_ordered,
+                   has_expansion_gage, in_expansion_network),
             by = "comid")
 
 # update HUC12 polygons to list gaged coverage status, outlet comid, and ACE

@@ -156,5 +156,6 @@ source(here("scripts", "04_create_output", "01_create_text_output.R"))
 source(here("scripts", "04_create_output", "02_create_gaged_expansion_network_figures.R"))
 source(here("scripts", "04_create_output", "03_create_reconfig_network_figures.R"))
 source(here("scripts", "04_create_output", "04_create_comparison_figures.R"))
+source(here("scripts", "04_create_output", "05_create_manuscript_text_figures.R"))
 ```
 

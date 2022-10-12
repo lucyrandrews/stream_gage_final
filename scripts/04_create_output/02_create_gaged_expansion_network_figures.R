@@ -70,8 +70,8 @@ tmap_save(tm = m,
 flowlines_midpoints <- flowlines_midpoints %>%
   left_join(flowlines %>%
               st_drop_geometry() %>%
-              filter(has_gage | has_expansion_gage) %>%
-              select(comid, has_gage, has_expansion_gage),
+              filter(has_gage | has_expansion_gage | has_simple_reconfig_network_gage | has_region_reconfig_gage) %>%
+              select(comid, has_gage, has_expansion_gage, has_simple_reconfig_network_gage, has_region_reconfig_gage),
             by = "comid")
   
 m <- ca_base_map +

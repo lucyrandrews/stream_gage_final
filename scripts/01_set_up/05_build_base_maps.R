@@ -20,6 +20,7 @@ light_yellow <- "#f7fcb9"
 mid_yellow <- "#fce436"
 dark_yellow <- "#dfbc2d"
 
+light_blue <- "#afdcf7"
 mid_blue <- "#6baed6"
 dark_blue <- "#084594"
 

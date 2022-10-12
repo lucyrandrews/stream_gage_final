@@ -13,36 +13,45 @@ sink(file = here("output", "text", "output_values.txt"),
 writeLines("\n\n\nTOTAL STREAM NETWORK AND MANAGEMENT-RELEVANT ATTRIBUTES ----------")
 
 # print total count of stream segments in the full network
-writeLines("\ntotal count of network segments:")
+writeLines("\ntotal count of network segments ----------")
 
 nrow(flowlines) %>%
   print()
 
 # print total stream length in analysis network
-writeLines("\ntotal network length (km):")
+writeLines("\ntotal network length (km) ----------")
 
 sum(flowlines$lengthkm) %>%
   print()
 
 # print flowline length statistics:
-writeLines("\n flowline length statistics (km):")
+writeLines("\n flowline length statistics (km) ----------")
 
 summary(flowlines$lengthkm) %>%
   print()
 
-writeLines("\nstandard deviation of flowline length (km):")
+writeLines("\nstandard deviation of flowline length (km) ----------")
 
 sd(flowlines$lengthkm) %>%
   print()
 
 # print count of active gages
-writeLines("\ncount of active gages:")
+writeLines("\ncount of active gages ----------")
 
 nrow(gages) %>%
   print()
 
+# print count of active gages, broken out by HUC4
+writeLines("\ncount of active gages, by region ----------")
+
+gages %>%
+  st_drop_geometry() %>%
+  group_by(huc4_name) %>%
+  count() %>%
+  pivot_wider(names_from = huc4_name, values_from = n)
+
 # print count of co-located active gages
-writeLines("\ncount of active gages co-located on a stream segment:")
+writeLines("\ncount of active gages co-located on a stream segment ----------")
 
 dup_gage_comids <- gages %>%
   group_by(comid) %>%
@@ -55,7 +64,7 @@ gages %>%
   print()
 
 # print ACE aquatic biodiversity statistics
-writeLines("\nACE aquatic biodiversity statistics:")
+writeLines("\nACE aquatic biodiversity statistics: ----------")
 
 flowlines %>%
   filter(ace_outlet_biodiv_value > 0) %>%
@@ -63,13 +72,7 @@ flowlines %>%
   summary(ace_outlet_biodiv_value)
 
 # print the count of HUC12s with upper-quartile biodiversity values
-writeLines("\ncount of HUC12s with biodiversity values above the 75th percentile:")
-
-ace_outlet_75pct <- st_drop_geometry(flowlines) %>%
-  filter(ace_outlet_biodiv_value > 0) %>%
-  filter(ace_outlet_biodiv_value > quantile(ace_outlet_biodiv_value, 0.75)) %>%
-  pull(ace_outlet_biodiv_value) %>%
-  min()
+writeLines("\ncount of HUC12s with biodiversity values above the 75th percentile ----------")
 
 flowlines %>%
   filter(ace_outlet_biodiv_value >= ace_outlet_75pct) %>%
@@ -77,19 +80,19 @@ flowlines %>%
   print()
 
 # print total length of stream segments that are reference quality
-writeLines("\ntotal length of flowlines that are reference quality (km):")
+writeLines("\ntotal length of flowlines that are reference quality (km) ----------")
 
 sum(flowlines$ref_quality_lengthkm) %>%
   print()
 
 # print total length of stream segments that intersect an NCCAG object
-writeLines("\ntotal length of flowlines that intersect an NCCAG feature (km):")
+writeLines("\ntotal length of flowlines that intersect an NCCAG feature (km) ----------")
 
 sum(flowlines$nccag_lengthkm) %>%
   print()
 
 # print total count of dams
-writeLines("\ntotal count of dams:")
+writeLines("\ntotal count of dams ----------")
 
 sum(flowlines$nid_dam) %>%
   print()
@@ -102,7 +105,7 @@ sum(flowlines$nid_dam) %>%
 writeLines("\n\n\nCURRENT ACTIVE NETWORK ----------")
 
 # print actively gaged stream length in analysis network
-writeLines("\nactively gaged network length (km):")
+writeLines("\nactively gaged network length (km) ----------")
 
 flowlines %>%
   filter(in_gaged_network) %>%
@@ -111,7 +114,7 @@ flowlines %>%
   print()
 
 # print average length that a given active gage covers
-writeLines("\naverage length covered by an active gage (km):")
+writeLines("\naverage length covered by an active gage (km) ----------")
 
 set_costs_all %>%
   filter(gage_comid %in% gages$comid) %>%
@@ -120,7 +123,7 @@ set_costs_all %>%
   print()
 
 # print standard deviation of the length that a given active gage covers
-writeLines("\nstandard deviation of average length covered by an active gage (km):")
+writeLines("\nstandard deviation of average length covered by an active gage (km) ----------")
 
 set_costs_all %>%
   filter(gage_comid %in% gages$comid) %>%
@@ -129,7 +132,7 @@ set_costs_all %>%
   print()
 
 # print length of flowlines that are redundantly and uniquely gaged
-writeLines("\nsummary statistics of flowlines that are redundantly gaged:")
+writeLines("\nsummary statistics of flowlines that are redundantly gaged ----------")
 
 network_analysis_long_all %>%
   filter(gage_comid %in% gages$comid) %>%
@@ -140,10 +143,9 @@ network_analysis_long_all %>%
             by = "comid") %>%
   summarize(count_of_redundantly_gaged_comids = n_distinct(comid),
             max_redundant_gages_per_segment = max(n),
-            total_length_redundantly_gaged = sum(lengthkm)) %>%
-  print()
+            total_length_redundantly_gaged = sum(lengthkm))
 
-writeLines("\nsummary statistics of flowlines that are uniquely gaged")
+writeLines("\nsummary statistics of flowlines that are uniquely gaged ----------")
 
 network_analysis_long_all %>%
   filter(gage_comid %in% gages$comid) %>%
@@ -153,11 +155,10 @@ network_analysis_long_all %>%
   left_join(st_drop_geometry(flowlines) %>% select(comid, lengthkm),
             by = "comid") %>%
   summarize(count_of_uniquely_gaged_comids = n_distinct(comid),
-            total_length_uniquely_gaged = sum(lengthkm)) %>%
-  print()
+            total_length_uniquely_gaged = sum(lengthkm))
 
 # print proportion of gaged length per HUC4
-writeLines("\nproportion of each HUC4 that is actively gaged")
+writeLines("\nproportion of each HUC4 that is actively gaged ----------")
 
 flowlines %>%
   st_drop_geometry() %>%
@@ -165,17 +166,26 @@ flowlines %>%
   summarize(lengthkm = sum(lengthkm)) %>%
   pivot_wider(names_from = huc4_name, values_from = lengthkm)
 
-
 # print count of HUC12 outlets above the 75th biodiversity percentile that are gaged
-writeLines("\ncount of HUC12 outlets above the 75th biodiversity percentile that are actively gaged")
+writeLines("\ncount of HUC12 outlets above the 75th biodiversity percentile that are actively gaged ----------")
 
 flowlines %>%
   filter(in_gaged_network, ace_outlet_biodiv_value >= ace_outlet_75pct) %>%
   nrow() %>%
   print()
 
+# print the count of HUC12 outlets above the 75th biodiversity percentile that are gaged, broken out by HUC4
+writeLines("\ncount of HUC12 outlets above the 75th biodiversity percentile that are actively gaged, by region ----------")
+
+flowlines %>%
+  st_drop_geometry() %>%
+  filter(ace_outlet_biodiv_value >= ace_outlet_75pct) %>%
+  group_by(huc4_name, in_gaged_network) %>%
+  count(name = "huc12_count") %>%
+  pivot_wider(names_from = huc4_name, values_from = huc12_count)
+
 # print the length of NCCAG-intersecting stream that is gaged
-writeLines("\nlength of NCCAG-intersecting stream that is actively gaged (km):")
+writeLines("\nlength of NCCAG-intersecting stream that is actively gaged (km) ----------")
 
 flowlines %>%
   filter(in_gaged_network) %>%
@@ -184,7 +194,7 @@ flowlines %>%
   print()
 
 # print the length of reference quality stream that is gaged
-writeLines("\nlength of reference quality stream that is actively gaged (km)")
+writeLines("\nlength of reference quality stream that is actively gaged (km) ----------")
 
 flowlines %>%
   filter(in_gaged_network) %>%
@@ -192,13 +202,32 @@ flowlines %>%
   sum() %>%
   print()
 
+# print the length of reference quality stream that is actively gaged, broken out by HUC4
+writeLines("\nlength of reference quality stream that is actively gaged (km), by region ----------")
+
+flowlines %>%
+  st_drop_geometry() %>%
+  group_by(huc4_name, in_gaged_network) %>%
+  summarize(ref_quality_lengthkm = sum(ref_quality_lengthkm)) %>%
+  pivot_wider(names_from = huc4_name, values_from = ref_quality_lengthkm)
+
 # print the count of dams that are gaged
-writeLines("\ncount of dams that are actively gaged:")
+writeLines("\ncount of dams that are actively gaged ----------")
 
 flowlines %>%
   filter(in_gaged_network, nid_dam) %>%
   nrow() %>%
   print()
+
+# print the count of dams that are gaged, broken out by HUC4
+writeLines("\ncount of dams that are actively gaged, by region ----------")
+
+flowlines %>%
+  st_drop_geometry() %>%
+  filter(nid_dam) %>%
+  group_by(huc4_name, in_gaged_network) %>%
+  summarize(dams_count = sum(nid_dam)) %>%
+  pivot_wider(names_from = huc4_name, values_from = dams_count)  
 
 
 
@@ -208,7 +237,7 @@ flowlines %>%
 writeLines("\n\n\nEXPANSION NETWORK ----------")
 
 # print expansion network gaged stream length in analysis network
-writeLines("\nexpansion gaged network length (km):")
+writeLines("\nexpansion gaged network length (km) ----------")
 
 flowlines %>%
   st_drop_geometry() %>%
@@ -218,7 +247,7 @@ flowlines %>%
   print()
 
 # print count of HUC12 outlets above the 75th biodiversity percentile that are expansion gaged
-writeLines("\ncount of HUC12 outlets above the 75th biodiversity percentile that are expansion gaged")
+writeLines("\ncount of HUC12 outlets above the 75th biodiversity percentile that are expansion gaged ----------")
 
 flowlines %>%
   st_drop_geometry() %>%
@@ -228,7 +257,7 @@ flowlines %>%
   print()
 
 # print the length of NCCAG-intersecting stream that is expansion gaged
-writeLines("\nlength of NCCAG-intersecting stream that is expansion gaged (km):")
+writeLines("\nlength of NCCAG-intersecting stream that is expansion gaged (km) ----------")
 
 flowlines %>%
   st_drop_geometry() %>%
@@ -238,7 +267,7 @@ flowlines %>%
   print()
 
 # print the length of reference quality stream that is expansion gaged
-writeLines("\nlength of reference quality stream that is expansion gaged (km)")
+writeLines("\nlength of reference quality stream that is expansion gaged (km) ----------")
 
 flowlines %>%
   st_drop_geometry() %>%
@@ -248,7 +277,7 @@ flowlines %>%
   print()
 
 # print the count of dams that are expansion gaged
-writeLines("\ncount of dams that are expansion gaged:")
+writeLines("\ncount of dams that are expansion gaged ----------")
 
 flowlines %>%
   st_drop_geometry() %>%
@@ -263,7 +292,7 @@ flowlines %>%
 writeLines("\n\n\nSIMPLE RECONFIGURED NETWORK ----------")
 
 # print gaged stream length in simple reconfigured network
-writeLines("\nsimple reconfigured gaged network length (km):")
+writeLines("\nsimple reconfigured gaged network length (km) ----------")
 
 flowlines %>%
   filter(in_simple_reconfig_network) %>%
@@ -272,7 +301,7 @@ flowlines %>%
   print()
 
 # print count of HUC12 outlets above the 75th biodiversity percentile that are gaged
-writeLines("\ncount of HUC12 outlets above the 75th biodiversity percentile that are gaged in a simple reconfiguration")
+writeLines("\ncount of HUC12 outlets above the 75th biodiversity percentile that are gaged in a simple reconfiguration ----------")
 
 flowlines %>%
   filter(in_simple_reconfig_network, ace_outlet_biodiv_value >= ace_outlet_75pct) %>%
@@ -280,7 +309,7 @@ flowlines %>%
   print()
 
 # print the length of NCCAG-intersecting stream that is gaged
-writeLines("\nlength of NCCAG-intersecting stream that is gaged in a simple reconfiguration (km):")
+writeLines("\nlength of NCCAG-intersecting stream that is gaged in a simple reconfiguration (km) ----------")
 
 flowlines %>%
   filter(in_simple_reconfig_network) %>%
@@ -289,7 +318,7 @@ flowlines %>%
   print()
 
 # print the length of reference quality stream that is gaged
-writeLines("\nlength of reference quality stream that is gaged in a simple reconfiguration (km)")
+writeLines("\nlength of reference quality stream that is gaged in a simple reconfiguration (km) ----------")
 
 flowlines %>%
   filter(in_simple_reconfig_network) %>%
@@ -298,7 +327,7 @@ flowlines %>%
   print()
 
 # print the count of dams that are gaged
-writeLines("\ncount of dams that are gaged in a simple reconfiguration:")
+writeLines("\ncount of dams that are gaged in a simple reconfiguration ----------")
 
 flowlines %>%
   filter(in_simple_reconfig_network, nid_dam) %>%
@@ -313,7 +342,7 @@ flowlines %>%
 writeLines("\n\n\nREGIONAL RECONFIGURED NETWORK ----------")
 
 # print gaged stream length in regional reconfigured network
-writeLines("\nregional reconfigured gaged network length (km):")
+writeLines("\nregional reconfigured gaged network length (km) ----------")
 
 flowlines %>%
   filter(in_region_reconfig_network) %>%
@@ -322,7 +351,7 @@ flowlines %>%
   print()
 
 # print count of HUC12 outlets above the 75th biodiversity percentile that are gaged
-writeLines("\ncount of HUC12 outlets above the 75th biodiversity percentile that are gaged in a regional reconfiguration")
+writeLines("\ncount of HUC12 outlets above the 75th biodiversity percentile that are gaged in a regional reconfiguration ----------")
 
 flowlines %>%
   filter(in_region_reconfig_network, ace_outlet_biodiv_value >= ace_outlet_75pct) %>%
@@ -330,7 +359,7 @@ flowlines %>%
   print()
 
 # print the length of NCCAG-intersecting stream that is gaged
-writeLines("\nlength of NCCAG-intersecting stream that is gaged in a regional reconfiguration (km):")
+writeLines("\nlength of NCCAG-intersecting stream that is gaged in a regional reconfiguration (km) ----------")
 
 flowlines %>%
   filter(in_region_reconfig_network) %>%
@@ -339,7 +368,7 @@ flowlines %>%
   print()
 
 # print the length of reference quality stream that is gaged
-writeLines("\nlength of reference quality stream that is gaged in a regional reconfiguration (km)")
+writeLines("\nlength of reference quality stream that is gaged in a regional reconfiguration (km) ----------")
 
 flowlines %>%
   filter(in_region_reconfig_network) %>%
@@ -348,7 +377,7 @@ flowlines %>%
   print()
 
 # print the count of dams that are gaged
-writeLines("\ncount of dams that are gaged in a regional reconfiguration:")
+writeLines("\ncount of dams that are gaged in a regional reconfiguration ----------")
 
 flowlines %>%
   filter(in_region_reconfig_network, nid_dam) %>%

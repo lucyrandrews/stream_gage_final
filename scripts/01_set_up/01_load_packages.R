@@ -49,6 +49,7 @@ library(tidycensus)
 
 # visualization
 library(ggnewscale)
+library(gridExtra)
 library(scales)
 library(ggsn)
 library(ggspatial)
