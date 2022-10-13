@@ -324,7 +324,7 @@ m <- ca_base_map +
   tm_shape(filter(flowlines, streamorde >= 3, !in_gaged_network)) +
   tm_lines(col = grey_2, lwd = 0.3) +
   tm_shape(filter(flowlines, streamorde >= 2, in_gaged_network)) +
-  tm_lines(col = black, lwd = 1.5) +
+  tm_lines(col = grey_4, lwd = 1.5) +
   tm_shape(filter(flowlines, streamorde >= 2, expansion_set == "expansion_500")) +
   tm_lines(col = mid_green, lwd = 1.5) +
   tm_shape(filter(flowlines, streamorde >= 2, expansion_set == "expansion_100")) +
@@ -335,7 +335,7 @@ m <- ca_base_map +
                 labels = c("ungauged network",
                            "active gauged network",
                            "expansion gauged network"),
-                col = c(grey_2, black, mid_green),
+                col = c(grey_2, grey_4, mid_green),
                 lwd = 2,
                 title = "Gauged Status") +
   tm_layout(main.title = "Figure 3B:\nExpanded Network - 500 Additional Gauges",
