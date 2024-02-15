@@ -1,4 +1,0 @@
-To do:
-
-- Check class of object returned by `st_line_midpoints()`
-- Build examples in function documentation
