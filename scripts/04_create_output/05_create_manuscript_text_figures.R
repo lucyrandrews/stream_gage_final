@@ -1,6 +1,8 @@
 ## CREATE MANUSCRIPT FIGURES
 
 # This script creates figures for the manuscript.
+# Figures were used in first manuscript draft; see `07_create_additional_manuscript_figures.R`
+# for second draft figures.
 
 # Figure 1: HUC4s, gaged network, gage locations map ----
 
@@ -348,6 +350,35 @@ m <- ca_base_map +
   
 tmap_save(tm = m,
           filename = here("output", "manuscript", "3B_expansion_network.png"),
+          width = 8,
+          height = 10,
+          units = "in")  
+
+# map regional expansion network
+m <- ca_base_map +
+  tm_shape(filter(flowlines, streamorde >= 3, !in_gaged_network)) +
+  tm_lines(col = grey_2, lwd = 0.3) +
+  tm_shape(filter(flowlines, streamorde >= 2, in_gaged_network)) +
+  tm_lines(col = grey_4, lwd = 1.5) +
+  tm_shape(filter(flowlines, streamorde >= 2, in_expansion_network_regional)) +
+  tm_lines(col = mid_green, lwd = 1.5) +
+  tm_add_legend(type = "line",
+                labels = c("ungauged network",
+                           "active gauged network",
+                           "expansion gauged network"),
+                col = c(grey_2, grey_4, mid_green),
+                lwd = 2,
+                title = "Gauged Status") +
+  tm_layout(main.title = "Figure 3B:\nExpanded Network - 500 Additional Gauges\nwith Regional Stratification",
+            main.title.position = "left",
+            legend.outside = FALSE,
+            legend.text.size = 1,
+            legend.title.size = 1.3,
+            legend.width = 1,
+            asp = 0)
+
+tmap_save(tm = m,
+          filename = here("output", "manuscript", "3B_expansion_network_regional.png"),
           width = 8,
           height = 10,
           units = "in")  
