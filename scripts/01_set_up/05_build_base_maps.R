@@ -22,11 +22,13 @@ dark_yellow <- "#dfbc2d"
 
 light_blue <- "#afdcf7"
 mid_blue <- "#6baed6"
+mid_dark_blue <- "#3c78c6"
 dark_blue <- "#084594"
 
 mid_purple <- "#756bb1"
 
 mid_orange <- "#fe9929"
+dark_orange <- "#d57000"
 
 
 
