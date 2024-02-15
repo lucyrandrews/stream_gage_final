@@ -3,6 +3,20 @@
 # This script reshapes set cover output and other data to prepare for summary
 # analysis and visualization
 
+# Summarize HUC4s by length for regional stratification
+# ceiling round to start, since regular rounding doesn't do the trick in
+# selecting enough sets in following lines
+huc4_lengths <- flowlines %>%
+  st_drop_geometry() %>%
+  group_by(huc4_name, huc4_group) %>%
+  summarize(huc4_lengthkm = sum(lengthkm)) %>%
+  mutate(huc4_lengthkm_prop = huc4_lengthkm / sum(flowlines$lengthkm),
+         reconfig_gage_count = ceiling(nrow(gages) * huc4_lengthkm_prop),
+         expansion_gage_count = ceiling(500 * huc4_lengthkm_prop)) %>%
+  ungroup()
+
+
+
 # Produce data products summarizing results ----
 
 # identify gaged network flowlines
@@ -15,9 +29,28 @@ gaged_comids <- network_analysis_long_all %>%
 flowlines <- flowlines %>%
   mutate(in_gaged_network = comid %in% gaged_comids)
 
-# identify top-n most valuable expansion sets
+# identify top-n most valuable expansion sets with and without regional stratification
 expansion_sets <- set_costs_expansion %>%
   distinct() %>%
+  arrange(-set_value, -length_gaged) %>%
+  slice(1:500) %>%
+  rowid_to_column(var = "expansion_set_index_ordered") %>%
+  mutate(expansion_50 = ifelse(expansion_set_index_ordered <= 50, TRUE, FALSE),
+         expansion_100 = ifelse(expansion_set_index_ordered <= 100, TRUE, FALSE),
+         expansion_500 = ifelse(expansion_set_index_ordered <= 500, TRUE, FALSE),
+         expansion_set = factor(case_when(expansion_set_index_ordered <= 50 ~ "expansion_50",
+                                          expansion_set_index_ordered <= 100 ~ "expansion_100",
+                                          expansion_set_index_ordered <= 500 ~ "expansion_500",
+                                          TRUE ~ NA_character_),
+                                levels = c("expansion_50", "expansion_100", "expansion_500")))
+
+expansion_sets_regional <- set_costs_expansion %>%
+  distinct() %>%
+  left_join(select(huc4_lengths, huc4_group, expansion_gage_count), by = "huc4_group") %>%
+  arrange(-set_value, -length_gaged) %>%
+  group_by(huc4_group) %>%
+  slice(seq_len(first(expansion_gage_count))) %>%
+  ungroup() %>%
   arrange(-set_value, -length_gaged) %>%
   slice(1:500) %>%
   rowid_to_column(var = "expansion_set_index_ordered") %>%
@@ -41,10 +74,25 @@ expansion_comids <- network_analysis_long_expansion %>%
          has_expansion_gage = case_when(gage_location == "on comid" ~ TRUE,
                                         TRUE ~ FALSE))
 
+expansion_comids_regional <- network_analysis_long_expansion %>%
+  left_join(select(expansion_sets_regional, gage_comid, expansion_set, expansion_set_index_ordered),
+            by = "gage_comid") %>%
+  filter(!is.na(expansion_set)) %>%
+  arrange(comid, expansion_set_index_ordered) %>%
+  distinct(comid, .keep_all = TRUE) %>%
+  mutate(in_expansion_network_regional = TRUE,
+         has_expansion_gage_regional = case_when(gage_location == "on comid" ~ TRUE,
+                                                 TRUE ~ FALSE))
+
 # identify expansion network flowlines
 flowlines <- flowlines %>%
   left_join(select(expansion_comids, comid, expansion_set, expansion_set_index_ordered,
                    has_expansion_gage, in_expansion_network),
+            by = "comid")
+
+flowlines <- flowlines %>%
+  left_join(select(expansion_comids_regional, comid,
+                   has_expansion_gage_regional, in_expansion_network_regional),
             by = "comid")
 
 # update HUC12 polygons to list gaged coverage status, outlet comid, and ACE
@@ -57,7 +105,8 @@ huc12s <- huc12s %>%
                      comid,
                      ace_outlet_biodiv_value,
                      in_gaged_network,
-                     in_expansion_network),
+                     in_expansion_network,
+                     in_expansion_network_regional),
             by = "huc12_id")
 
 
@@ -77,17 +126,6 @@ simple_reconfig_comids <- network_analysis_long_reconfig %>%
 flowlines <- flowlines %>% 
   mutate(in_simple_reconfig_network = comid %in% simple_reconfig_comids,
          has_simple_reconfig_network_gage = comid %in% simple_reconfig_sets$gage_comid)
-
-# now for a network with gages distributed across HUC4 regions, proportional to
-# the stream length in each region; ceiling round to start, since regular
-# rounding doesn't do the trick in selecting enough sets in following lines
-huc4_lengths <- flowlines %>%
-  st_drop_geometry() %>%
-  group_by(huc4_name, huc4_group) %>%
-  summarize(huc4_lengthkm = sum(lengthkm)) %>%
-  mutate(huc4_lengthkm_prop = huc4_lengthkm / sum(flowlines$lengthkm),
-         reconfig_gage_count = ceiling(nrow(gages) * huc4_lengthkm_prop)) %>%
-  ungroup()
 
 # create an object to hold results
 region_reconfig_sets <- simple_reconfig_sets[0, ]
