@@ -12,14 +12,14 @@ to [California Senate Bill 19](https://leginfo.legislature.ca.gov/faces/billText
 2. Publish code used in a manuscript currently under review for possible
 publication in _Nature Sustainability_.
 
+**Abstract**
 
-
-
+Stream gauging stations provide critical information to water managers, but biases and gaps in gauge placement, compounded by gauge deactivations, limit our ability to track river flows and address global water challenges. Here we introduce a novel approach for identifying gauging sites that efficiently fill gaps in coverage within river networks while also addressing water management priorities, including reservoir operations, biodiversity conservation, and hydroclimatic monitoring. Applying this approach to gauges in California, USA, we found significant gaps in the stream monitoring network. Hypothetically reconfiguring gauges to locations that maximize coverage and representation of management objectives highlights the current network’s biases. Through the strategic reactivation and placement of additional gauges, we demonstrate how stream gauging networks can be designed to support sustainable water management. 
 
 ## Repository Structure
 
 The code workflow is structured for scripts to be run in sequence. A user should
-run the file `compile_analysis.Rmd` does the following:
+run the file `compile_analysis.Rmd`, which does the following:
 
 1. Sets up the environment
 2. Downloads, imports, and cleans data that represent the stream network, stream
@@ -71,7 +71,7 @@ would provide.
             ├── 05_create_manuscript_text_figures.R
             ├── 06_create_additional_manuscript_figures.R
             ├── 07_create_methods_example.R
-        ├── compile_analysis.Rmd
+        ├── compile_analysis.Rmd                            # key compilation script
     ├── data  
         ├── metadata
             ├── ace_aquatic_biodiversity_factsheet.pdf 
