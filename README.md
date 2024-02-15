@@ -12,11 +12,9 @@ to [California Senate Bill 19](https://leginfo.legislature.ca.gov/faces/billText
 2. Publish code used in a manuscript currently under review for possible
 publication in _Nature Sustainability_.
 
-**Abstract**
+**_Title:**_ Designing efficient stream gauging networks for twenty-first century water management
 
-Designing efficient stream gauging networks for twenty-first century water management
-
-_Stream gauging stations provide critical information to water managers, but biases and gaps in gauge placement, compounded by gauge deactivations, limit our ability to track river flows and address global water challenges. Here we introduce a novel approach for identifying gauging sites that efficiently fill gaps in coverage within river networks while also addressing water management priorities, including reservoir operations, biodiversity conservation, and hydroclimatic monitoring. Applying this approach to gauges in California, USA, we found significant gaps in the stream monitoring network. Hypothetically reconfiguring gauges to locations that maximize coverage and representation of management objectives highlights the current network’s biases. Through the strategic reactivation and placement of additional gauges, we demonstrate how stream gauging networks can be designed to support sustainable water management._ 
+**_Abstract:_**Stream gauging stations provide critical information to water managers, but biases and gaps in gauge placement, compounded by gauge deactivations, limit our ability to track river flows and address global water challenges. Here we introduce a novel approach for identifying gauging sites that efficiently fill gaps in coverage within river networks while also addressing water management priorities, including reservoir operations, biodiversity conservation, and hydroclimatic monitoring. Applying this approach to gauges in California, USA, we found significant gaps in the stream monitoring network. Hypothetically reconfiguring gauges to locations that maximize coverage and representation of management objectives highlights the current network’s biases. Through the strategic reactivation and placement of additional gauges, we demonstrate how stream gauging networks can be designed to support sustainable water management. 
 
 <br>
 <br>
@@ -104,3 +102,8 @@ while American water management agencies prefer "gage". We use "gage" in our
 scripts (since they were originally conceived to support State Water Resources
 Control Board activities) but "gauge" in our writing. Apologies for the slight
 confusion this may create!
+
+<br>
+<br>
+
+![maps and graphs illustrating gage network reconfiguration scenarios](https://github.com/lucyrandrews/stream_gage_final/blob/main/data/metadata/example_result.png "maps and graphs illustrating gage network reconfiguration scenarios")
