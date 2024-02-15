@@ -1,7 +1,7 @@
 ---
 title: "compile_analysis"
 author: "Lucy Andrews"
-date: "3/14/2022"
+date: "2/15/24"
 output: html_document
 editor_options: 
   chunk_output_type: inline
@@ -145,10 +145,19 @@ source(here("scripts", "03_analyze_networks", "06_analyze_reconfigure_coverage.R
 
 # Generate text and figures output
 
+## Start with figures from the first draft of the manuscript 
+
 ```{r generate_figures, quiet = TRUE, warning = FALSE}
 source(here("scripts", "04_create_output", "01_create_text_output.R"))
 source(here("scripts", "04_create_output", "02_create_gaged_expansion_network_figures.R"))
 source(here("scripts", "04_create_output", "03_create_reconfig_network_figures.R"))
 source(here("scripts", "04_create_output", "04_create_comparison_figures.R"))
 source(here("scripts", "04_create_output", "05_create_manuscript_text_figures.R"))
+```
+
+## Then produce figures for the second draft of the manuscript
+
+```{r generate_second_figures, quiet = TRUE, warning = FALSE}
+source(here("scripts", "04_create_output", "06_create_additional_manuscript_figures.R"))
+source(here("scripts", "04_create_output", "07_create_methods_example.R"))
 ```
