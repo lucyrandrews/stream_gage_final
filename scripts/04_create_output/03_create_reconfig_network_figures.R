@@ -1,6 +1,8 @@
 ## CREATE RECONFIGURED NETWORK FIGURES
 
 # This script creates figures that visualize reconfigured networks.
+# Figures were used in first manuscript draft; see `07_create_additional_manuscript_figures.R`
+# for second draft figures.
 
 # Map simple reconfigured gaged network ----
 

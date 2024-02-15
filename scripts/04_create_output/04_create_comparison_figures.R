@@ -1,6 +1,8 @@
 ## CREATE COMPARISON NETWORK FIGURES
 
 # This script creates figures that compare active and reconfigured networks.
+# Figures were used in first manuscript draft; see `07_create_additional_manuscript_figures.R`
+# for second draft figures.
 
 # Create comparison bar charts ----
 

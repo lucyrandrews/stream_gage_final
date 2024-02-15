@@ -1,6 +1,8 @@
 ## CREATE GAGED NETWORK FIGURES
 
 # This script creates figures that visualize the currently gaged network.
+# Figures were used in first manuscript draft; see `07_create_additional_manuscript_figures.R`
+# for second draft figures.
 
 # Map currently gaged network ----
 
@@ -65,8 +67,9 @@ m <- ca_base_map +
 tmap_save(tm = m,
           filename = here("output", "figures", "currently_gaged_expansion_network_value.png"))
   
-# make a map of active and expansion gage locations
 
+
+# make a map of active and expansion gage locations
 flowlines_midpoints <- flowlines_midpoints %>%
   left_join(flowlines %>%
               st_drop_geometry() %>%
