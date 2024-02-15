@@ -1,5 +1,18 @@
 # Optimal Stream Gage Analysis
 
+This repository serves two functions:
+
+1. Provides a code workflow to illustrate how network coverage analysis was  
+performed for the State Water Resources Control Board's 2022 [Stream Gaging Plan]{https://www.waterboards.ca.gov/waterrights/water_issues/programs/stream_gaging_plan/}.  
+[Lucy Andrews]{https://www.lucyrandrews.com/about} and [Dr. Theodore Grantham]{https://ourenvironment.berkeley.edu/people/theodore-grantham}  
+supported the computational work underlying the plan. The plan was created in response  
+to [California Senate Bill 19]{https://leginfo.legislature.ca.gov/faces/billTextClient.xhtml?bill_id=201920200SB19}.
+
+2. Publish code used in a manuscript currently under review for possible  
+publication in _Nature Sustainability_.
+
+
+
 ## Repository Structure
 
 ```
