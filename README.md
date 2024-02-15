@@ -18,8 +18,13 @@ Designing efficient stream gauging networks for twenty-first century water manag
 
 _Stream gauging stations provide critical information to water managers, but biases and gaps in gauge placement, compounded by gauge deactivations, limit our ability to track river flows and address global water challenges. Here we introduce a novel approach for identifying gauging sites that efficiently fill gaps in coverage within river networks while also addressing water management priorities, including reservoir operations, biodiversity conservation, and hydroclimatic monitoring. Applying this approach to gauges in California, USA, we found significant gaps in the stream monitoring network. Hypothetically reconfiguring gauges to locations that maximize coverage and representation of management objectives highlights the current network’s biases. Through the strategic reactivation and placement of additional gauges, we demonstrate how stream gauging networks can be designed to support sustainable water management._ 
 
+<br>
+<br>
+
 ![flow chart of methods](https://github.com/lucyrandrews/stream_gage_final/blob/main/data/metadata/methods_flowchart.png "flow chart of methods")
 
+<br>
+<br>
 ## Repository Structure
 
 The code workflow is structured for scripts to be run in sequence. A user should
