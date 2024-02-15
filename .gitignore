@@ -49,6 +49,7 @@ packages_unpublished/StrmAnlyzeR_master
 # data files to big to host on GitHub and that are downloaded via scripts
 data/raw_data/*
 data/processed_data/*
+output/*
 
 # to do file used to track outstanding tasks
 to_do
