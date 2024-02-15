@@ -1,7 +1,11 @@
-## PRODUCE TEXT OUTPUT
+## CREATE A SERIES OF MAPS THAT ILLUSTRATE METHODS
 
 # This script creates example figures used to illustrates methods.
 
+# Note that figures generated here should have legends created in an image editing
+# program - I didn't have time to sort that out in code before the submission deadline!
+
+# set up objects for example
 huc12_ids_example <- c(180500050101, 180500050102, 180500050103, 180500050104)
 
 huc12s_example <- filter(huc12s, huc12_id %in% huc12_ids_example)

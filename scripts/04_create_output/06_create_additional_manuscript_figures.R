@@ -2,6 +2,9 @@
 
 # This script creates figures that are used in a manuscript second draft.
 
+# Note that figures generated here should have legends created in an image editing
+# program - I didn't have time to sort that out in code before the submission deadline!
+
 # Specify text size defaults -----
 geom_text_size <- 3.5
 axis_text_size <- 14/5 * geom_text_size
