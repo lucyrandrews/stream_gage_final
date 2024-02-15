@@ -286,6 +286,65 @@ flowlines %>%
   summarize(nid_dam_count = n()) %>%
   print()
 
+
+
+# Compute summary values - regional expansion network -----
+
+# print a heading
+writeLines("\n\n\nREGIONAL EXPANSION NETWORK ----------")
+
+# print expansion network gaged stream length in analysis network
+writeLines("\regional nexpansion gaged network length (km) ----------")
+
+flowlines %>%
+  st_drop_geometry() %>%
+  filter(in_expansion_network_regional) %>%
+  group_by(huc4_group) %>%
+  summarize(lengthkm = sum(lengthkm)) %>%
+  print()
+
+# print count of HUC12 outlets above the 75th biodiversity percentile that are expansion gaged
+writeLines("\ncount of HUC12 outlets above the 75th biodiversity percentile that are expansion gaged ----------")
+
+flowlines %>%
+  st_drop_geometry() %>%
+  filter(in_expansion_network_regional, ace_outlet_biodiv_value >= ace_outlet_75pct) %>%
+  group_by(huc4_group) %>%
+  summarize(ace_outlet_75pct_count = n()) %>%
+  print()
+
+# print the length of NCCAG-intersecting stream that is expansion gaged
+writeLines("\nlength of NCCAG-intersecting stream that is expansion gaged (km) ----------")
+
+flowlines %>%
+  st_drop_geometry() %>%
+  filter(in_expansion_network_regional) %>%
+  group_by(huc4_group) %>%
+  summarize(nccag_lengthkm = sum(nccag_lengthkm)) %>%
+  print()
+
+# print the length of reference quality stream that is expansion gaged
+writeLines("\nlength of reference quality stream that is expansion gaged (km) ----------")
+
+flowlines %>%
+  st_drop_geometry() %>%
+  filter(in_expansion_network_regional) %>%
+  group_by(huc4_group) %>%
+  summarize(ref_quality_lengthkm = sum(ref_quality_lengthkm)) %>%
+  print()
+
+# print the count of dams that are expansion gaged
+writeLines("\ncount of dams that are expansion gaged ----------")
+
+flowlines %>%
+  st_drop_geometry() %>%
+  filter(in_expansion_network_regional, nid_dam) %>%
+  group_by(huc4_group) %>%
+  summarize(nid_dam_count = n()) %>%
+  print()
+
+
+
 # Compute summary values - simple reconfigured gaged network ----
 
 # print a heading
@@ -401,3 +460,24 @@ m <- ca_base_map +
 
 tmap_save(tm = m,
           filename = here("output", "figures", "ca_huc2.png"))
+
+
+
+# Write out active gages .csv
+
+gages %>%
+  st_drop_geometry() %>%
+  select(gage_index, STA, St_Name, County, comid, huc4_name, HUC4, Source, Latitude, Longitude) %>%
+  mutate(St_Name = str_to_title(St_Name)) %>%
+  rename(gauge_index = gage_index,
+         gage_station_id = STA,
+         gauge_station_name = St_Name,
+         huc4_code = HUC4,
+         latitude = Latitude,
+         longitude = Longitude,
+         county = County,
+         source = Source) %>%
+  write_csv(here("output", "manuscript", "active_gauges.csv"),
+            append = FALSE)
+
+
