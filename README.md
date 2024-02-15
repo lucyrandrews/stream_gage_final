@@ -83,6 +83,9 @@ would provide.
     ├── data  
         ├── metadata
             ├── ace_aquatic_biodiversity_factsheet.pdf 
+            ├── example_result.png
+            ├── methods_flowchart.png
+            ├── nccag_metadata_link.txt
             ├── nhdplus_v2_user_guide.pdf
         ├── raw_data                                        # created via set-up script
         ├── processed_data                                  # created via set-up script
