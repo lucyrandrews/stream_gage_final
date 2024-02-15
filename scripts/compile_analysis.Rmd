@@ -3,6 +3,8 @@ title: "compile_analysis"
 author: "Lucy Andrews"
 date: "3/14/2022"
 output: html_document
+editor_options: 
+  chunk_output_type: inline
 ---
 
 # Set up environment, specify parameters for analysis, and create global objects
@@ -10,20 +12,16 @@ output: html_document
 ```{r set_up, quiet = TRUE, warning = FALSE}
 # load `here` package for easy relative file paths
 library(here)
-
 # run set-up
 source(here("scripts", "01_set_up", "01_load_packages.R"))
 source(here("scripts", "01_set_up", "02_set_options_parameters.R"))
 source(here("scripts", "01_set_up", "03_create_directories.R"))
 source(here("scripts", "01_set_up", "04_build_functions.R"))
 source(here("scripts", "01_set_up", "05_build_base_maps.R"))
-
 # indicate whether to use TNC gage data or only USGS GAGESII data
 tnc_data <- TRUE
-
 # indicate whether to use pre-processed data
 load_data <- TRUE
-
 # indicate which site attributes to use in assessing value
 # note that attributes data will still be imported; it just won't be used in
 # assigning value to gages
@@ -31,7 +29,6 @@ use_ace <- TRUE
 use_nccag <- FALSE
 use_ref_streams <- TRUE
 use_dams <- TRUE
-
 # indicate how many expansion sites to grab, at maximum
 n_expansion <- 500
 ```
@@ -53,14 +50,11 @@ source(here("scripts", "02_clean_data", "01_import_clean_nhd_wbd_gages.R"))
 ```{r import_attributes, quiet = TRUE, warning = FALSE}
 # import California Department of Fish and Wildlife Areas of Conservation Emphasis data
 source(here("scripts", "02_clean_data", "02_import_clean_ace.R"))
-
 # import California Department of Water Resources Natural Communities Commonly
 # Associated with Groundwater
 source(here("scripts", "02_clean_data", "03_import_clean_nccag.R"))
-
 # import reference quality stream segments
 source(here("scripts", "02_clean_data", "04_import_clean_ref_streams.R"))
-
 # import National Inventory of Dams dams
 source(here("scripts", "02_clean_data", "05_import_clean_nid.R"))
 ```
@@ -158,4 +152,3 @@ source(here("scripts", "04_create_output", "03_create_reconfig_network_figures.R
 source(here("scripts", "04_create_output", "04_create_comparison_figures.R"))
 source(here("scripts", "04_create_output", "05_create_manuscript_text_figures.R"))
 ```
-
