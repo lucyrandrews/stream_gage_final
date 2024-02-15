@@ -9,12 +9,34 @@ Grantham](https://ourenvironment.berkeley.edu/people/theodore-grantham)
 supported the computational work underlying the plan. The plan was created in response
 to [California Senate Bill 19](https://leginfo.legislature.ca.gov/faces/billTextClient.xhtml?bill_id=201920200SB19).
 
-2. Publish code used in a manuscript currently under review for possible  
+2. Publish code used in a manuscript currently under review for possible
 publication in _Nature Sustainability_.
 
 
 
+
+
 ## Repository Structure
+
+The code workflow is structured for scripts to be run in sequence. A user should
+run the file `compile_analysis.Rmd` does the following:
+
+1. Sets up the environment
+2. Downloads, imports, and cleans data that represent the stream network, stream
+gages, and management objectives (gaging dams, critical biodiversity, reference-quality
+streams, and natural communities commonly associated with groundwater)
+3. Associates stream network segments with attributes relevant to management objectives
+4. Analyzes network coverage provided by gages, both extant and hypothetical
+5. Evaluates the coverage that the current gage network provides of management
+objectives
+6. Runs a greedy set cover algorithm on potential gage locations to identify
+the most efficient set of gages that would cover the entire network for two scenarios
+(network expansion and network reconfiguration)
+7. Ranks efficient gages by the coverage of management objectives that gages
+would provide.
+8. Summarizes and visualizes results
+9. Creates example figures that illustrate methods
+
 
 ```
 .
