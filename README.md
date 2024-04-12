@@ -1,16 +1,18 @@
 # Efficient stream gauging networks
 
+[![DOI](https://zenodo.org/badge/466255500.svg)](https://zenodo.org/doi/10.5281/zenodo.10966890)
+
 This repository serves two functions:
 
-1. Provides a code workflow to illustrate how network coverage analysis was
-performed for the State Water Resources Control Board's 2022 [Stream Gaging Plan](https://www.waterboards.ca.gov/waterrights/water_issues/programs/stream_gaging_plan/).
+1. Provides a code workflow and example analysis to illustrate how network
+coverage analysis was performed for the State Water Resources Control Board's
+2022 [Stream Gaging Plan](https://www.waterboards.ca.gov/waterrights/water_issues/programs/stream_gaging_plan/).
 [Lucy Andrews](https://www.lucyrandrews.com/about) and [Dr. Theodore
 Grantham](https://ourenvironment.berkeley.edu/people/theodore-grantham)
 supported the computational work underlying the plan. The plan was created in response
 to [California Senate Bill 19](https://leginfo.legislature.ca.gov/faces/billTextClient.xhtml?bill_id=201920200SB19).
 
-2. Publish code used in a manuscript currently under review for possible
-publication in _Nature Sustainability_.
+2. Publish code used in a manuscript published in _Nature Sustainability_.
 
 **Title:** Designing efficient stream gauging networks for twenty-first century water management
 
